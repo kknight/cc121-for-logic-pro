@@ -3,8 +3,6 @@
 --
 PORT_IN = 'Port1'
 PORT_OUT = 'Port1'
-VERSION = 105
-
 
 ---
 -- Controller info
@@ -13,8 +11,10 @@ function controller_info()
     return {
         model = "CC121",
         manufacturer = "Steinberg",
-        version = VERSION,
         copyright = "©2026 Kristjan Knight",
+
+        auto_passthrough = false,
+        ignore_notes = true,
 
         items = {
             -- Selected-channel volume fader (Pitch Bend 14-bit)
@@ -39,28 +39,33 @@ function controller_info()
                 midi = { 0xE0, MIDI_LSB, MIDI_MSB }
             },
 
-            {
-                name = "FaderTouch",
-                label = "Touch",
-                objectType = "Button",
-                midiType = "Momentary",
-                midi = { 0x90, 104, MIDI_LSB }
-            },
-
             -- Pan encoder: CC16 (0x10), relative 2's complement (right=1.., left=65..)
             {
                 name = "Pan",
                 label = "Pan",
                 objectType = "Knob",
                 midiType = "RelativeSM",
+                inport=PORT_IN,
+                outport=PORT_OUT,
                 midi = { 0xB0, 0x10, MIDI_LSB }
             },
 
+            -- Mute: Note 16 (0x10)
+            {
+                name="Mute",
+                label="Mute",
+                objectType="Button",
+                midiType="Momentary",
+                inport=PORT_IN,
+                outport=PORT_OUT,
+                midi={0x90, 0x10, MIDI_LSB}  -- 0x10 == note 16
+            },
+
             -- Transport buttons
-            { name = "Play", label = "Play", objectType = "Button", midiType = "Momentary", midi = { 0x90, 0x5E, MIDI_LSB } },
-            { name = "Stop", label = "Stop", objectType = "Button", midiType = "Momentary", midi = { 0x90, 0x5D, MIDI_LSB } },
-            { name = "Record", label = "Rec", objectType = "Button", midiType = "Momentary", midi = { 0x90, 0x5F, MIDI_LSB } },
-            { name = "Loop", label = "Cycle", objectType = "Button", midiType = "Momentary", midi = { 0x90, 0x56, MIDI_LSB } },
+            { name = "Play", label = "Play", objectType = "Button", midiType = "Momentary", inport=PORT_IN, outport=PORT_OUT, midi = { 0x90, 0x5E, MIDI_LSB } },
+            { name = "Stop", label = "Stop", objectType = "Button", midiType = "Momentary", inport=PORT_IN, outport=PORT_OUT, midi = { 0x90, 0x5D, MIDI_LSB } },
+            { name = "Record", label = "Rec", objectType = "Button", midiType = "Momentary", inport=PORT_IN, outport=PORT_OUT, midi = { 0x90, 0x5F, MIDI_LSB } },
+            { name = "Loop", label = "Cycle", objectType = "Button", midiType = "Momentary", inport=PORT_IN, outport=PORT_OUT, midi = { 0x90, 0x56, MIDI_LSB } },
         },
 
         -- Minimal assignments so Logic knows what these controls should do
@@ -70,8 +75,8 @@ function controller_info()
 
             -- Selected track (CSTrack=0) volume + pan
             { control = "Fader", CSTrack = 0, trackParam = AUVOLUME, paramName = "@tn Level" },
-            { control = "FaderTouch", CSTrack = 0, trackParam = AUVOLUME, touch = true },
             { control = "Pan", CSTrack = 0, trackParam = AUPAN, paramName = "@tn Pan" },
+            { control="Mute", CSTrack=0, trackParam=AUMUTE, paramName="@tn Mute" },
 
             -- Transport (Key Commands)
             { control = "Play", keyCommand = KCT_PLAY },
