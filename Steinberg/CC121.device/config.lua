@@ -72,6 +72,39 @@ function controller_info()
                 midi={0x90, 0x08, MIDI_LSB}  -- 0x08 == note 8
             },
 
+            -- Record Arm / Rec Ready: Note 0 (0x00)
+            {
+                name="RecArm",
+                label="RecArm",
+                objectType="Button",
+                midiType="Momentary",
+                inport=PORT_IN,
+                outport=PORT_OUT,
+                midi={0x90, 0x00, MIDI_LSB}  -- 0x00 == note 0
+            },
+
+            -- Automation Read: Note 74 (0x4A)
+            {
+                name="Read",
+                label="Auto R",
+                objectType="Button",
+                midiType="Momentary",
+                inport=PORT_IN,
+                outport=PORT_OUT,
+                midi={0x90, 0x4A, MIDI_LSB}  -- 0x4A == note 74
+            },
+
+            -- Automation Write: Note 75 (0x4B)
+            {
+                name="Write",
+                label="Auto W",
+                objectType="Button",
+                midiType="Momentary",
+                inport=PORT_IN,
+                outport=PORT_OUT,
+                midi={0x90, 0x4B, MIDI_LSB}  -- 0x4B == note 75
+            },
+
             -- Transport buttons
             { name = "Play", label = "Play", objectType = "Button", midiType = "Momentary", inport=PORT_IN, outport=PORT_OUT, midi = { 0x90, 0x5E, MIDI_LSB } },
             { name = "Stop", label = "Stop", objectType = "Button", midiType = "Momentary", inport=PORT_IN, outport=PORT_OUT, midi = { 0x90, 0x5D, MIDI_LSB } },
@@ -89,6 +122,7 @@ function controller_info()
             { control = "Pan", CSTrack = 0, trackParam = AUPAN, paramName = "@tn Pan" },
             { control="Mute", CSTrack=0, trackParam=AUMUTE, paramName="@tn Mute" },
             { control="Solo", CSTrack=0, trackParam=AUSOLO, paramName="@tn Solo" },
+            { control="RecArm", CSTrack=0, trackParam=CS_RECRDY, paramName="@tn Rec Ready" },
 
             -- Transport (Key Commands)
             { control = "Play", keyCommand = KCT_PLAY },
