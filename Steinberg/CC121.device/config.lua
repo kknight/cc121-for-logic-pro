@@ -1,7 +1,20 @@
+--
+-- Globals
+--
+PORT_IN = 'Port1'
+PORT_OUT = 'Port1'
+VERSION = 105
+
+
+---
+-- Controller info
+--
 function controller_info()
     return {
         model = "CC121",
         manufacturer = "Steinberg",
+        version = VERSION,
+        copyright = "©2026 Kristjan Knight",
 
         items = {
             -- Selected-channel volume fader (Pitch Bend 14-bit)
@@ -14,10 +27,13 @@ function controller_info()
                 valueMode = kAssignScaled,
 
                 -- CC121 touch: Note 104 (G#6) with 127 touch / 0 release
-                midiTouched = { 0x90, 104, MIDI_VALUE },
+                midiTouched = { 0x90, 104, MIDI_LSB },
 
                 hasFeedback = true,
                 hasFeedbackValueText = true,
+
+                inport=PORT_IN,
+                outport=PORT_OUT,
 
                 -- Pitch Bend on channel 1
                 midi = { 0xE0, MIDI_LSB, MIDI_MSB }
