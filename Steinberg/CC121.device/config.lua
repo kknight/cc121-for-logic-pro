@@ -61,6 +61,17 @@ function controller_info()
                 midi={0x90, 0x10, MIDI_LSB}  -- 0x10 == note 16
             },
 
+            -- Solo: Note 8 (0x08)
+            {
+                name="Solo",
+                label="Solo",
+                objectType="Button",
+                midiType="Momentary",
+                inport=PORT_IN,
+                outport=PORT_OUT,
+                midi={0x90, 0x08, MIDI_LSB}  -- 0x08 == note 8
+            },
+
             -- Transport buttons
             { name = "Play", label = "Play", objectType = "Button", midiType = "Momentary", inport=PORT_IN, outport=PORT_OUT, midi = { 0x90, 0x5E, MIDI_LSB } },
             { name = "Stop", label = "Stop", objectType = "Button", midiType = "Momentary", inport=PORT_IN, outport=PORT_OUT, midi = { 0x90, 0x5D, MIDI_LSB } },
@@ -77,6 +88,7 @@ function controller_info()
             { control = "Fader", CSTrack = 0, trackParam = AUVOLUME, paramName = "@tn Level" },
             { control = "Pan", CSTrack = 0, trackParam = AUPAN, paramName = "@tn Pan" },
             { control="Mute", CSTrack=0, trackParam=AUMUTE, paramName="@tn Mute" },
+            { control="Solo", CSTrack=0, trackParam=AUSOLO, paramName="@tn Solo" },
 
             -- Transport (Key Commands)
             { control = "Play", keyCommand = KCT_PLAY },
