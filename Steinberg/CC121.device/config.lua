@@ -105,6 +105,28 @@ function controller_info()
                 midi={0x90, 0x4B, MIDI_LSB}  -- 0x4B == note 75
             },
 
+            -- Channel Select Left: Note 48 (0x30)
+            {
+                name="ChanLeft",
+                label="Ch <",
+                objectType="Button",
+                midiType="Momentary",
+                inport=PORT_IN,
+                outport=PORT_OUT,
+                midi={0x90, 0x30, MIDI_LSB}
+            },
+
+            -- Channel Select Right: Note 49 (0x31)
+            {
+                name="ChanRight",
+                label="Ch >",
+                objectType="Button",
+                midiType="Momentary",
+                inport=PORT_IN,
+                outport=PORT_OUT,
+                midi={0x90, 0x31, MIDI_LSB}
+            },
+
             -- Transport buttons
             { name = "Play", label = "Play", objectType = "Button", midiType = "Momentary", inport=PORT_IN, outport=PORT_OUT, midi = { 0x90, 0x5E, MIDI_LSB } },
             { name = "Stop", label = "Stop", objectType = "Button", midiType = "Momentary", inport=PORT_IN, outport=PORT_OUT, midi = { 0x90, 0x5D, MIDI_LSB } },
@@ -114,6 +136,16 @@ function controller_info()
 
         -- Minimal assignments so Logic knows what these controls should do
         assignments = {
+            {zone = 'Global'},
+            {mode = 'Global'},
+
+            -- Channel Select
+            { control="ChanLeft",  keyCmd=1272 }, -- Select Previous Track
+            { control="ChanRight", keyCmd=1273 }, -- Select Next Track
+
+            --
+            -- Mixer
+            --
             { zone = "CC121: Mixer" },
             { mode = "Default" },
 
@@ -124,7 +156,12 @@ function controller_info()
             { control="Solo", CSTrack=0, trackParam=AUSOLO, paramName="@tn Solo" },
             { control="RecArm", CSTrack=0, trackParam=CS_RECRDY, paramName="@tn Rec Ready" },
 
-            -- Transport (Key Commands)
+            --
+            -- Transport
+            --
+            {zone='Transport'},
+            {mode='Transport'},
+
             { control = "Play", keyCommand = KCT_PLAY },
             { control = "Stop", keyCommand = KCT_STOP },
             { control = "Record", keyCommand = KCT_RECORD },
