@@ -208,6 +208,17 @@ function controller_info()
                 midi={0x90, NOTE.CHANNELSELECTRIGHT, MIDI_LSB}
             },
 
+            -- JOG button (enables jog-wheel mode): Note 0x76
+            {
+                name="JogMode",
+                label="JOG",
+                objectType="Button",
+                midiType="Momentary",
+                inport=PORT_IN,
+                outport=PORT_OUT,
+                midi={0x90, NOTE.JOG, MIDI_LSB}
+            },
+
             -- Transport buttons
             {
                 name = "Play",
@@ -249,6 +260,17 @@ function controller_info()
                 midi = { 0x90, NOTE.LOOP, MIDI_LSB }
             },
 
+            -- AI/Jog knob
+            {
+                name="AI",
+                label="AI",
+                objectType="Knob",
+                midiType="RelativeSM",      -- if it’s 1 right / 65 left style
+                inport=PORT_IN,
+                outport=PORT_OUT,
+                midi={0xB0, CC.AIKNOB, MIDI_LSB}
+            },
+
         },
 
         --
@@ -261,6 +283,9 @@ function controller_info()
             -- Channel Select
             { control="ChanLeft",  keyCmd=KEYCMD.TRACKLEFT }, -- Select Previous Track
             { control="ChanRight", keyCmd=KEYCMD.TRACKRIGHT }, -- Select Next Track
+
+            -- Toggle Jog mode (press JOG to enter Jog mode)
+            { control="JogMode", setMode="Jog" },
 
             --
             -- Mixer
@@ -275,6 +300,22 @@ function controller_info()
             { control="Solo", CSTrack=0, trackParam=AUSOLO, paramName="@tn Solo" },
             { control="RecArm", CSTrack=0, trackParam=CS_RECRDY, paramName="@tn Rec Ready" },
 
+            -- AI knob
+            { control="AI", CSTrack=0, trackParam=CS_PLUGINPAR1, paramName="@tp,@tn" },
+
+            --
+            -- Jog mode: repurpose the AI knob as a jog wheel (scrub)
+            --
+            { zone = "Jog" },
+            { mode = "Jog" },
+
+            -- Press JOG again to return to Mixer mode
+            { control="JogMode", setMode="Mixer" },
+
+            -- AI knob -> scrub/jog (global)
+            -- NOTE: This relies on Logic's global scrub object being available as AGL_SCRUB.
+            { control="AI", globalObj=AGL_SCRUB, valueMode=kAssignRelative, paramName="Jog" },
+
             --
             -- Transport
             --
@@ -285,6 +326,7 @@ function controller_info()
             { control = "Stop", keyCmd = KEYCMD.STOP },
             { control = "Record", keyCmd = KEYCMD.RECORD },
             { control = "Loop", keyCmd = KEYCMD.CYCLE },
+
         }
     }
 end
