@@ -4,6 +4,11 @@
 PORT_IN = 'Port1'
 PORT_OUT = 'Port1'
 
+local MODE = {
+    ai = 'CC121:AI',
+    jog = 'CC121:Jog',
+}
+
 --
 -- Constants
 --
@@ -38,7 +43,7 @@ NOTE = {
     EQENABLE3           = 0x72,
     EQENABLE4           = 0x73,
     EQTYPE              = 0x74,
-    ALLBYPASS           = 0x75,
+    ALLBYPASS            = 0x75,
     JOG                 = 0x76,
     LOCK                = 0x77,
     INPUTMONITOR        = 0x78,
@@ -69,7 +74,7 @@ KEYCMD = {
     TRACKLEFT          = 1272, -- Select Previous Track
     TRACKRIGHT         = 1273, -- Select Next Track
 
-    -- Transport / workflow (from other MDS examples)
+    -- Transport / workflow
     CAPTURE_MIDI       = 542,  -- Capture as Recording
     QUANTIZE           = 110,  -- Quantize Selected Regions/Cells/Events
     CLICK              = 474,  -- Toggle Metronome Click
@@ -90,37 +95,28 @@ function controller_info()
         model = "CC121",
         manufacturer = "Steinberg",
         copyright = "©2026 Kristjan Knight",
-
-        auto_passthrough = false,
-        ignore_notes = true,
+        version = 100,
 
         --
         -- MIDI device setup
         --
         items = {
             -- Selected-channel volume fader (Pitch Bend 14-bit)
-            -- NOTE: your device behaves correctly with MIDI_LSB/MIDI_MSB swapped.
             {
                 name = "Fader",
                 label = "Selected Vol",
                 objectType = "VFader",
                 midiType = "Absolute",
                 valueMode = kAssignScaled,
-
-                -- CC121 touch: Note 104 (G#6) with 127 touch / 0 release
                 midiTouched = { 0x90, NOTE.FADERTOUCH, MIDI_LSB },
-
                 hasFeedback = true,
                 hasFeedbackValueText = true,
-
                 inport=PORT_IN,
                 outport=PORT_OUT,
-
-                -- Pitch Bend on channel 1
                 midi = { 0xE0, MIDI_LSB, MIDI_MSB }
             },
 
-            -- Pan encoder: CC16 (0x10), relative 2's complement (right=1.., left=65..)
+            -- Pan encoder: CC16, relative 2's complement
             {
                 name = "Pan",
                 label = "Pan",
@@ -131,7 +127,7 @@ function controller_info()
                 midi = { 0xB0, CC.PAN, MIDI_LSB }
             },
 
-            -- Mute: Note 16 (0x10)
+            -- Mute
             {
                 name="Mute",
                 label="Mute",
@@ -139,10 +135,10 @@ function controller_info()
                 midiType="Momentary",
                 inport=PORT_IN,
                 outport=PORT_OUT,
-                midi={0x90, NOTE.MUTE, MIDI_LSB}  -- 0x10 == note 16
+                midi={0x90, NOTE.MUTE, MIDI_LSB}
             },
 
-            -- Solo: Note 8 (0x08)
+            -- Solo
             {
                 name="Solo",
                 label="Solo",
@@ -150,10 +146,21 @@ function controller_info()
                 midiType="Momentary",
                 inport=PORT_IN,
                 outport=PORT_OUT,
-                midi={0x90, NOTE.SOLO, MIDI_LSB}  -- 0x08 == note 8
+                midi={0x90, NOTE.SOLO, MIDI_LSB}
             },
 
-            -- Record Arm / Rec Ready: Note 0 (0x00)
+            -- Input Monitor
+            {
+                name="InputMonitor",
+                label="In Mon",
+                objectType="Button",
+                midiType="Momentary",
+                inport=PORT_IN,
+                outport=PORT_OUT,
+                midi={0x90, NOTE.INPUTMONITOR, MIDI_LSB}
+            },
+
+            -- Record Arm
             {
                 name="RecArm",
                 label="RecArm",
@@ -161,10 +168,10 @@ function controller_info()
                 midiType="Momentary",
                 inport=PORT_IN,
                 outport=PORT_OUT,
-                midi={0x90, NOTE.RECORDARM, MIDI_LSB}  -- 0x00 == note 0
+                midi={0x90, NOTE.RECORDARM, MIDI_LSB}
             },
 
-            -- Automation Read: Note 74 (0x4A)
+            -- Automation Read
             {
                 name="Read",
                 label="Auto R",
@@ -172,10 +179,10 @@ function controller_info()
                 midiType="Momentary",
                 inport=PORT_IN,
                 outport=PORT_OUT,
-                midi={0x90, NOTE.AUTOMATIONREAD, MIDI_LSB}  -- 0x4A == note 74
+                midi={0x90, NOTE.AUTOMATIONREAD, MIDI_LSB}
             },
 
-            -- Automation Write: Note 75 (0x4B)
+            -- Automation Write
             {
                 name="Write",
                 label="Auto W",
@@ -183,10 +190,10 @@ function controller_info()
                 midiType="Momentary",
                 inport=PORT_IN,
                 outport=PORT_OUT,
-                midi={0x90, NOTE.AUTOMATIONWRITE, MIDI_LSB}  -- 0x4B == note 75
+                midi={0x90, NOTE.AUTOMATIONWRITE, MIDI_LSB}
             },
 
-            -- Channel Select Left: Note 48 (0x30)
+            -- Channel Select Left
             {
                 name="ChanLeft",
                 label="Ch <",
@@ -197,7 +204,7 @@ function controller_info()
                 midi={0x90, NOTE.CHANNELSELECTLEFT, MIDI_LSB}
             },
 
-            -- Channel Select Right: Note 49 (0x31)
+            -- Channel Select Right
             {
                 name="ChanRight",
                 label="Ch >",
@@ -206,17 +213,6 @@ function controller_info()
                 inport=PORT_IN,
                 outport=PORT_OUT,
                 midi={0x90, NOTE.CHANNELSELECTRIGHT, MIDI_LSB}
-            },
-
-            -- JOG button (enables jog-wheel mode): Note 0x76
-            {
-                name="JogMode",
-                label="JOG",
-                objectType="Button",
-                midiType="Momentary",
-                inport=PORT_IN,
-                outport=PORT_OUT,
-                midi={0x90, NOTE.JOG, MIDI_LSB}
             },
 
             -- Transport buttons
@@ -260,12 +256,25 @@ function controller_info()
                 midi = { 0x90, NOTE.LOOP, MIDI_LSB }
             },
 
-            -- AI/Jog knob
+            -- JOG mode toggle button
+            {
+                name="Jog",
+                label="JOG",
+                objectType = "Button",
+                midiType = "Momentary",
+                hasFeedback = true,
+                maxVal=1,
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi={0x90, NOTE.JOG, MIDI_LSB}
+            },
+
+            -- AI knob — same physical control, used in both modes
             {
                 name="AI",
                 label="AI",
                 objectType="Knob",
-                midiType="RelativeSM",      -- if it’s 1 right / 65 left style
+                midiType="RelativeSM",
                 inport=PORT_IN,
                 outport=PORT_OUT,
                 midi={0xB0, CC.AIKNOB, MIDI_LSB}
@@ -277,55 +286,53 @@ function controller_info()
         -- Logic/Mainstage/GarageBand assignments
         --
         assignments = {
-            {zone = 'Global'},
-            {mode = 'Global'},
 
-            -- Channel Select
-            { control="ChanLeft",  keyCmd=KEYCMD.TRACKLEFT }, -- Select Previous Track
-            { control="ChanRight", keyCmd=KEYCMD.TRACKRIGHT }, -- Select Next Track
+            ----------------------------------------------------------------
+            -- GLOBAL ZONE: always-active, mode-free controls
+            ----------------------------------------------------------------
+            {zone = 'CC121: Global'},
 
-            -- Toggle Jog mode (press JOG to enter Jog mode)
-            { control="JogMode", setMode="Jog" },
+            -- Channel Select (always active, not mode-dependent)
+            { control="ChanLeft",  keyCmd=KEYCMD.TRACKLEFT },
+            { control="ChanRight", keyCmd=KEYCMD.TRACKRIGHT },
 
-            --
-            -- Mixer
-            --
-            { zone = "Mixer" },
-            { mode = "Mixer" },
+            ----------------------------------------------------------------
+            -- AI KNOB ZONE: modes for the AI knob (Global vs Jog)
+            ----------------------------------------------------------------
+            {zone = 'CC121: AI Knob'},
 
-            -- Selected track (CSTrack=0) volume + pan
-            { control = "Fader", CSTrack = 0, trackParam = AUVOLUME, paramName = "@tn Level" },
-            { control = "Pan", CSTrack = 0, trackParam = AUPAN, paramName = "@tn Pan" },
-            { control="Mute", CSTrack=0, trackParam=AUMUTE, paramName="@tn Mute" },
-            { control="Solo", CSTrack=0, trackParam=AUSOLO, paramName="@tn Solo" },
-            { control="RecArm", CSTrack=0, trackParam=CS_RECRDY, paramName="@tn Rec Ready" },
-
-            -- AI knob
+            -- MODE: Global — AI knob controls plugin parameter
+            {mode = MODE.ai },
+            {control='Jog',  setMode=MODE.jog },
             { control="AI", CSTrack=0, trackParam=CS_PLUGINPAR1, paramName="@tp,@tn" },
 
-            --
-            -- Jog mode: repurpose the AI knob as a jog wheel (scrub)
-            --
-            { zone = "Jog" },
-            { mode = "Jog" },
+            -- MODE: Jog — AI knob controls scrub/jog
+            {mode = MODE.jog},
+            {control='Jog', setMode=MODE.ai},
+            { control="AI", globalObj=AGL_SCRUB, clockPart=ACP_FORMAT,
+              valueMode=kAssignRelative, paramName="Scrub" },
 
-            -- Press JOG again to return to Mixer mode
-            { control="JogMode", setMode="Mixer" },
+            ----------------------------------------------------------------
+            -- MIXER ZONE: always-active, no modes
+            ----------------------------------------------------------------
+            {zone = 'CC121: Mixer'},
 
-            -- AI knob -> scrub/jog (global)
-            -- NOTE: This relies on Logic's global scrub object being available as AGL_SCRUB.
-            { control="AI", globalObj=AGL_SCRUB, valueMode=kAssignRelative, paramName="Jog" },
+            { control = "Fader", CSTrack=0, trackParam = AUVOLUME, paramName = "@tn Level" },
+            { control = "Pan",   CSTrack=0, trackParam = AUPAN,    paramName = "@tn Pan" },
+            { control="Mute",         CSTrack=0, trackParam=AUMUTE,      paramName="@tn Mute" },
+            { control="Solo",         CSTrack=0, trackParam=AUSOLO,      paramName="@tn Solo" },
+            { control="InputMonitor", CSTrack=0, trackParam=AUINPUTMON,  paramName="@tn Input Monitor" },
+            { control="RecArm",       CSTrack=0, trackParam=CS_RECRDY,   paramName="@tn Rec Ready" },
 
-            --
-            -- Transport
-            --
-            {zone='Transport'},
-            {mode='Transport'},
+            ----------------------------------------------------------------
+            -- TRANSPORT ZONE: always-active, no modes
+            ----------------------------------------------------------------
+            {zone = 'CC121: Transport'},
 
-            { control = "Play", keyCmd = KEYCMD.PLAY_TOGGLE },
-            { control = "Stop", keyCmd = KEYCMD.STOP },
+            { control = "Play",   keyCmd = KEYCMD.PLAY_TOGGLE },
+            { control = "Stop",   keyCmd = KEYCMD.STOP },
             { control = "Record", keyCmd = KEYCMD.RECORD },
-            { control = "Loop", keyCmd = KEYCMD.CYCLE },
+            { control = "Loop",   keyCmd = KEYCMD.CYCLE },
 
         }
     }
