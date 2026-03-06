@@ -87,6 +87,26 @@ KEYCMD = {
     CYCLE = 15    -- Cycle Mode
 }
 
+--
+-- Control IDs
+--
+local kControlIDFader = 0
+local kControlIDPan = 1
+local kControlIDMute = 2
+local kControlIDSolo = 3
+local kControlIDInputMonitor = 4
+local kControlIDRecArm = 5
+local kControlIDRead = 6
+local kControlIDWrite = 7
+local kControlIDChanLeft = 8
+local kControlIDChanRight = 9
+local kControlIDPlay = 10
+local kControlIDStop = 11
+local kControlIDRecord = 12
+local kControlIDLoop = 13
+local kControlIDJog = 14
+local kControlIDAI = 15
+
 ---
 -- Controller info
 --
@@ -105,6 +125,7 @@ function controller_info()
             {
                 name = "Fader",
                 label = "Selected Vol",
+                controlID = kControlIDFader,
                 objectType = "VFader",
                 midiType = "Absolute",
                 valueMode = kAssignScaled,
@@ -120,6 +141,7 @@ function controller_info()
             {
                 name = "Pan",
                 label = "Pan",
+                controlID = kControlIDPan,
                 objectType = "Knob",
                 midiType = "RelativeSM",
                 inport = PORT_IN,
@@ -131,6 +153,7 @@ function controller_info()
             {
                 name = "Mute",
                 label = "Mute",
+                controlID = kControlIDMute,
                 objectType = "Button",
                 midiType = "Momentary",
                 inport = PORT_IN,
@@ -142,6 +165,7 @@ function controller_info()
             {
                 name = "Solo",
                 label = "Solo",
+                controlID = kControlIDSolo,
                 objectType = "Button",
                 midiType = "Momentary",
                 inport = PORT_IN,
@@ -153,6 +177,7 @@ function controller_info()
             {
                 name = "InputMonitor",
                 label = "In Mon",
+                controlID = kControlIDInputMonitor,
                 objectType = "Button",
                 midiType = "Momentary",
                 inport = PORT_IN,
@@ -164,6 +189,7 @@ function controller_info()
             {
                 name = "RecArm",
                 label = "RecArm",
+                controlID = kControlIDRecArm,
                 objectType = "Button",
                 midiType = "Momentary",
                 inport = PORT_IN,
@@ -175,6 +201,7 @@ function controller_info()
             {
                 name = "Read",
                 label = "Auto R",
+                controlID = kControlIDRead,
                 objectType = "Button",
                 midiType = "Momentary",
                 inport = PORT_IN,
@@ -186,6 +213,7 @@ function controller_info()
             {
                 name = "Write",
                 label = "Auto W",
+                controlID = kControlIDWrite,
                 objectType = "Button",
                 midiType = "Momentary",
                 inport = PORT_IN,
@@ -197,6 +225,7 @@ function controller_info()
             {
                 name = "ChanLeft",
                 label = "Ch <",
+                controlID = kControlIDChanLeft,
                 objectType = "Button",
                 midiType = "Momentary",
                 inport = PORT_IN,
@@ -208,6 +237,7 @@ function controller_info()
             {
                 name = "ChanRight",
                 label = "Ch >",
+                controlID = kControlIDChanRight,
                 objectType = "Button",
                 midiType = "Momentary",
                 inport = PORT_IN,
@@ -219,6 +249,7 @@ function controller_info()
             {
                 name = "Play",
                 label = "Play",
+                controlID = kControlIDPlay,
                 objectType = "Button",
                 midiType = "Momentary",
                 inport = PORT_IN,
@@ -229,6 +260,7 @@ function controller_info()
             {
                 name = "Stop",
                 label = "Stop",
+                controlID = kControlIDStop,
                 objectType = "Button",
                 midiType = "Momentary",
                 inport = PORT_IN,
@@ -239,6 +271,7 @@ function controller_info()
             {
                 name = "Record",
                 label = "Rec",
+                controlID = kControlIDRecord,
                 objectType = "Button",
                 midiType = "Momentary",
                 inport = PORT_IN,
@@ -249,6 +282,7 @@ function controller_info()
             {
                 name = "Loop",
                 label = "Cycle",
+                controlID = kControlIDLoop,
                 objectType = "Button",
                 midiType = "Momentary",
                 inport = PORT_IN,
@@ -260,6 +294,7 @@ function controller_info()
             {
                 name = "Jog",
                 label = "JOG",
+                controlID = kControlIDJog,
                 objectType = "Button",
                 midiType = "Momentary",
                 hasFeedback = true,
@@ -273,6 +308,7 @@ function controller_info()
             {
                 name = "AI",
                 label = "AI",
+                controlID = kControlIDAI,
                 objectType = "Knob",
                 midiType = "RelativeSM",
                 inport = PORT_IN,
