@@ -340,7 +340,8 @@ function controller_info()
             -- MODE: Global — AI knob controls plugin parameter
             { mode = MODE.ai },
             { control = 'Jog', setMode = MODE.jog, feedbackVal = 0 },
-            { control = "AI", CSTrack = 0, trackParam = CS_PLUGINPAR1, paramName = "@tp,@tn" },
+            --{ control = "AI", CSTrack = 0, trackParam = CS_PLUGINPAR1, paramName = "@tp,@tn" },
+            {control='AI', globalObj=AGL_HORIZONTALZOOM },
 
             -- MODE: Jog — AI knob controls scrub/jog
             { mode = MODE.jog },
