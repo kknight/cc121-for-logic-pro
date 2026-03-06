@@ -263,7 +263,7 @@ function controller_info()
                 objectType = "Button",
                 midiType = "Momentary",
                 hasFeedback = true,
-                maxVal = 1,
+                maxVal = 2,
                 inport = PORT_IN,
                 outport = PORT_OUT,
                 midi = { 0x90, NOTE.JOG, MIDI_LSB }
@@ -303,12 +303,12 @@ function controller_info()
 
             -- MODE: Global — AI knob controls plugin parameter
             { mode = MODE.ai },
-            { control = 'Jog', setMode = MODE.jog },
+            { control = 'Jog', setMode = MODE.jog, feedbackVal = 0 },
             { control = "AI", CSTrack = 0, trackParam = CS_PLUGINPAR1, paramName = "@tp,@tn" },
 
             -- MODE: Jog — AI knob controls scrub/jog
             { mode = MODE.jog },
-            { control = 'Jog', setMode = MODE.ai },
+            { control = 'Jog', setMode = MODE.ai, feedbackVal = 1 },
             { control = "AI", globalObj = AGL_SCRUB, clockPart = ACP_FORMAT,
               valueMode = kAssignRelative, paramName = "Scrub" },
 
