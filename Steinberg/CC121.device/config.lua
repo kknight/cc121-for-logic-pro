@@ -112,10 +112,11 @@ local kControlIDAI = 15
 --
 function controller_info()
     return {
-        model = "CC121",
-        manufacturer = "Steinberg",
+        model = "Steinberg CC121",
+        manufacturer = "YAMAHA",
         copyright = "©2026 Kristjan Knight",
-        version = 100,
+        version = "1.0.0",
+
 
         --
         -- MIDI device setup
