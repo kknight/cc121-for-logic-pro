@@ -70,6 +70,12 @@ CC = {
 }
 
 KEYCMD = {
+    -- Automation
+    VIEW_AUTOMATION = 116,
+    VIEW_FLEX       = 1753,
+    AUTO = 1015,
+    AUTOSELECT = 1378,
+
     -- Track selection
     TRACKLEFT = 1272, -- Select Previous Track
     TRACKRIGHT = 1273, -- Select Next Track
@@ -106,6 +112,7 @@ local kControlIDRecord = 12
 local kControlIDLoop = 13
 local kControlIDJog = 14
 local kControlIDAI = 15
+local kControlIDViewCycle = 16
 
 ---
 -- Controller info
@@ -196,6 +203,20 @@ function controller_info()
                 inport = PORT_IN,
                 outport = PORT_OUT,
                 midi = { 0x90, NOTE.RECORDARM, MIDI_LSB }
+            },
+
+            -- E button
+            {
+                name = "ViewCycle",
+                label = "View",
+                controlID = kControlIDViewCycle,
+                objectType = "Button",
+                midiType = "Momentary",
+                hasFeedback = true,
+                maxVal = 2,
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0x90, NOTE.EBUTTON, MIDI_LSB }
             },
 
             -- Automation Read
@@ -355,12 +376,22 @@ function controller_info()
             ----------------------------------------------------------------
             { zone = 'CC121: Mixer' },
 
-            { control = "Fader", CSTrack = 0, trackParam = AUVOLUME, paramName = "@tn Level" },
-            { control = "Pan", CSTrack = 0, trackParam = AUPAN, paramName = "@tn Pan" },
-            { control = "Mute", CSTrack = 0, trackParam = AUMUTE, paramName = "@tn Mute" },
-            { control = "Solo", CSTrack = 0, trackParam = AUSOLO, paramName = "@tn Solo" },
+            { control = "Fader",  CSTrack = 0, trackParam = AUVOLUME,  paramName = "@tn Level" },
+            { control = "Pan",    CSTrack = 0, trackParam = AUPAN,     paramName = "@tn Pan" },
+            { control = "Mute",   CSTrack = 0, trackParam = AUMUTE,    paramName = "@tn Mute" },
+            { control = "Solo",   CSTrack = 0, trackParam = AUSOLO,    paramName = "@tn Solo" },
             { control = "InputMonitor", CSTrack = 0, trackParam = AUINPUTMON, paramName = "@tn Input Monitor" },
             { control = "RecArm", CSTrack = 0, trackParam = CS_RECRDY, paramName = "@tn Rec Ready" },
+
+            -- This toggles On/Off selected track automation and put it in Read mode
+            { control = "Read",   CSTrack = 0, trackParam = CS_AUTO, valueMode = kAssignToggle, minVal = 1, multiply = 1, paramName = '@tn Read' },
+
+            -- This toggles between Read/Latch automation for the selected track
+            { control = "Write", keyCmd = KEYCMD.AUTO  },
+
+            -- Automation write mode - we dont want this, leaving it for reference
+            --{ control = "Write",  CSTrack = 0, trackParam = CS_AUTO, valueMode = kAssignDirect, paramName = 'Automation ' },
+
 
             ----------------------------------------------------------------
             -- TRANSPORT ZONE: always-active, no modes
