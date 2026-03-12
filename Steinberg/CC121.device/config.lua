@@ -81,6 +81,7 @@ KEYCMD = {
     VIEW_FLEX       = 1753,
     AUTO = 1015,
     AUTOSELECT = 1378,
+    AUTOMONITORING = 694,
 
     -- Track selection
     TRACKLEFT = 1272, -- Select Previous Track
@@ -401,7 +402,7 @@ function controller_info()
             { control = "Pan",    CSTrack = 0, trackParam = AUPAN,     paramName = "@tn Pan" },
             { control = "Mute",   CSTrack = 0, trackParam = AUMUTE,    paramName = "@tn Mute" },
             { control = "Solo",   CSTrack = 0, trackParam = AUSOLO,    paramName = "@tn Solo" },
-            { control = "InputMonitor", CSTrack = 0, trackParam = AUINPUTMON, paramName = "@tn Input Monitor" },
+            { control = "InputMonitor", keyCmd = KEYCMD.AUTOMONITORING },
             { control = "RecArm", CSTrack = 0, trackParam = CS_RECRDY, paramName = "@tn Rec Ready" },
             { control = "OpenVST", keyCmd = KEYCMD.PLUG_INS },
 
