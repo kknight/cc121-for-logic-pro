@@ -96,7 +96,8 @@ KEYCMD = {
     PLAY_TOGGLE = 535, -- Play or Stop
     STOP = 5, -- Stop
     RECORD = 7, -- Record
-    CYCLE = 15    -- Cycle Mode
+    CYCLE = 15,   -- Cycle Mode
+    PLUG_INS = 1255 -- Show/Hide Plug-ins
 }
 
 --
@@ -119,6 +120,7 @@ local kControlIDLoop = 13
 local kControlIDJog = 14
 local kControlIDAI = 15
 local kControlIDE = 16
+local kControlIDVst = 17
 
 ---
 -- Controller info
@@ -345,6 +347,18 @@ function controller_info()
                 midi = { 0x90, NOTE.EBUTTON, MIDI_LSB }
             },
 
+            -- Open VST button
+            {
+                name = "OpenVST",
+                label = "Open Plugin",
+                controlID = kControlIDVst,
+                objectType = "Button",
+                midiType = "Momentary",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0x90, NOTE.OPENVSTI, MIDI_LSB }
+            },
+
         },
 
         --
@@ -389,6 +403,7 @@ function controller_info()
             { control = "Solo",   CSTrack = 0, trackParam = AUSOLO,    paramName = "@tn Solo" },
             { control = "InputMonitor", CSTrack = 0, trackParam = AUINPUTMON, paramName = "@tn Input Monitor" },
             { control = "RecArm", CSTrack = 0, trackParam = CS_RECRDY, paramName = "@tn Rec Ready" },
+            { control = "OpenVST", keyCmd = KEYCMD.PLUG_INS },
 
             -- This toggles On/Off selected track automation and put it in Read mode
             { control = "Read",   CSTrack = 0, trackParam = CS_AUTO, valueMode = kAssignToggle, minVal = 1, multiply = 1, paramName = '@tn Read' },
