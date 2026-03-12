@@ -128,7 +128,7 @@ function controller_info()
         model = "Steinberg CC121",
         manufacturer = "YAMAHA",
         copyright = "©2026 Kristjan Knight",
-        version = "1.0.0",
+        version = 105,
 
 
         --
@@ -339,6 +339,8 @@ function controller_info()
                 midiType = "Momentary",
                 inport = PORT_IN,
                 outport = PORT_OUT,
+                hasFeedback = true,
+                maxVal = 127,
                 valueMode = kAssignRotate,
                 midi = { 0x90, NOTE.EBUTTON, MIDI_LSB }
             },
@@ -417,14 +419,14 @@ function controller_info()
 
             -- When in Automation Mode: EBUTTON press triggers Automation Key Command
             { mode=MODE.viewAuto },
-            { control = "EBUTTON", keyCmd = KEYCMD.VIEW_AUTOMATION, group = "ViewCycle" },
+            { control = "EBUTTON", keyCmd = KEYCMD.VIEW_AUTOMATION, group = "ViewCycle", feedbackVal = 2 },
 
             -- When in Flex Mode: EBUTTON press triggers Flex Key Command
             { mode=MODE.viewFlex },
-            { control = "EBUTTON", keyCmd = KEYCMD.VIEW_FLEX, group = "ViewCycle" },
+            { control = "EBUTTON", keyCmd = KEYCMD.VIEW_FLEX, group = "ViewCycle", feedbackVal = 3 },
 
             { mode=MODE.viewOff },
-            { control = "EBUTTON", keyCmd = KEYCMD.VIEW_FLEX, group = "ViewCycle" },
+            { control = "EBUTTON", keyCmd = KEYCMD.VIEW_FLEX, group = "ViewCycle", feedbackVal = 0 },
 
         }
     }
