@@ -5,8 +5,14 @@ PORT_IN = 'Port1'
 PORT_OUT = 'Port1'
 
 local MODE = {
-    ai = 'CC121:AI',
-    jog = 'CC121:Jog',
+    -- AI section modes
+    ai = 'AI',
+    jog = 'Jog',
+
+    -- e-Button rotation modes
+    viewAuto = 'Auto',
+    viewFlex = 'Flex',
+    viewOff  = 'Off',
 }
 
 --
@@ -112,7 +118,7 @@ local kControlIDRecord = 12
 local kControlIDLoop = 13
 local kControlIDJog = 14
 local kControlIDAI = 15
-local kControlIDViewCycle = 16
+local kControlIDE = 16
 
 ---
 -- Controller info
@@ -203,20 +209,6 @@ function controller_info()
                 inport = PORT_IN,
                 outport = PORT_OUT,
                 midi = { 0x90, NOTE.RECORDARM, MIDI_LSB }
-            },
-
-            -- E button
-            {
-                name = "ViewCycle",
-                label = "View",
-                controlID = kControlIDViewCycle,
-                objectType = "Button",
-                midiType = "Momentary",
-                hasFeedback = true,
-                maxVal = 2,
-                inport = PORT_IN,
-                outport = PORT_OUT,
-                midi = { 0x90, NOTE.EBUTTON, MIDI_LSB }
             },
 
             -- Automation Read
@@ -338,6 +330,19 @@ function controller_info()
                 midi = { 0xB0, CC.AIKNOB, MIDI_LSB }
             },
 
+            -- The physical E-Button
+            {
+                name = "EBUTTON",
+                label = "E-Btn",
+                controlID = kControlIDE,
+                objectType = "Button",
+                midiType = "Momentary",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                valueMode = kAssignRotate,
+                midi = { 0x90, NOTE.EBUTTON, MIDI_LSB }
+            },
+
         },
 
         --
@@ -361,13 +366,13 @@ function controller_info()
 
             -- MODE: Global — AI knob controls plugin parameter
             { mode = MODE.ai },
-            { control = 'Jog', setMode = MODE.jog, feedbackVal = 0 },
+            { control = 'Jog', setMode=MODE.jog, feedbackVal = 0 },
             --{ control = "AI", CSTrack = 0, trackParam = CS_PLUGINPAR1, paramName = "@tp,@tn" },
             {control='AI', globalObj=AGL_HORIZONTALZOOM },
 
             -- MODE: Jog — AI knob controls scrub/jog
             { mode = MODE.jog },
-            { control = 'Jog', setMode = MODE.ai, feedbackVal = 1 },
+            { control = 'Jog', setMode=MODE.ai, feedbackVal = 1 },
             { control = "AI", globalObj = AGL_SCRUB, clockPart = ACP_FORMAT,
               valueMode = kAssignRelative, paramName = "Scrub" },
 
@@ -402,6 +407,24 @@ function controller_info()
             { control = "Stop", keyCmd = KEYCMD.STOP },
             { control = "Record", keyCmd = KEYCMD.RECORD },
             { control = "Loop", keyCmd = KEYCMD.CYCLE },
+
+            ----------------------------------------------------------------
+            -- VIEW TOGGLE ZONE (The Rotate Logic)
+            ----------------------------------------------------------------
+            { zone = 'CC121: View Toggle' },
+
+            { control = "EBUTTON", group = "ViewCycle", valueMode = kAssignRotate, setMode=MODE.viewOff },
+
+            -- When in Automation Mode: EBUTTON press triggers Automation Key Command
+            { mode=MODE.viewAuto },
+            { control = "EBUTTON", keyCmd = KEYCMD.VIEW_AUTOMATION, group = "ViewCycle" },
+
+            -- When in Flex Mode: EBUTTON press triggers Flex Key Command
+            { mode=MODE.viewFlex },
+            { control = "EBUTTON", keyCmd = KEYCMD.VIEW_FLEX, group = "ViewCycle" },
+
+            { mode=MODE.viewOff },
+            { control = "EBUTTON", keyCmd = KEYCMD.VIEW_FLEX, group = "ViewCycle" },
 
         }
     }
