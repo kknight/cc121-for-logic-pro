@@ -101,6 +101,10 @@ KEYCMD = {
     PLUG_INS = 1255 -- Show/Hide Plug-ins
 }
 
+TRACKPARAM = {
+    INPUT_MON = 266 -- Toggle input monitor
+}
+
 --
 -- Control IDs
 --
@@ -402,7 +406,7 @@ function controller_info()
             { control = "Pan",    CSTrack = 0, trackParam = AUPAN,     paramName = "@tn Pan" },
             { control = "Mute",   CSTrack = 0, trackParam = AUMUTE,    paramName = "@tn Mute" },
             { control = "Solo",   CSTrack = 0, trackParam = AUSOLO,    paramName = "@tn Solo" },
-            { control = "InputMonitor", keyCmd = KEYCMD.AUTOMONITORING },
+            { control = "InputMonitor", CSTrack = 0, trackParam = TRACKPARAM.INPUT_MON, paramName = "@tn Input Monitor" },
             { control = "RecArm", CSTrack = 0, trackParam = CS_RECRDY, paramName = "@tn Rec Ready" },
             { control = "OpenVST", keyCmd = KEYCMD.PLUG_INS },
 
