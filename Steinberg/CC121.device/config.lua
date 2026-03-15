@@ -12,7 +12,7 @@ local MODE = {
     -- e-Button rotation modes
     viewAuto = 'Auto',
     viewFlex = 'Flex',
-    viewOff  = 'Off',
+    viewOff = 'Off',
 }
 
 --
@@ -21,84 +21,185 @@ local MODE = {
 
 -- MIDI Note numbers (buttons)
 NOTE = {
-    RECORDARM = 0x00,
+    RECORD_ARM = 0x00,
     SOLO = 0x08,
     MUTE = 0x10,
-    CHANNELSELECTLEFT = 0x30,
-    CHANNELSELECTRIGHT = 0x31,
-    EBUTTON = 0x33,
+    CHANNEL_SELECT_LEFT = 0x30,
+    CHANNEL_SELECT_RIGHT = 0x31,
+    E_BUTTON = 0x33,
     FUNCTION1 = 0x36,
     FUNCTION2 = 0x37,
     FUNCTION3 = 0x38,
     FUNCTION4 = 0x39,
-    VALUEENCODERBUTTON = 0x3A,
+    VALUE_ENCODER_BUTTON = 0x3A,
     FOOTSWITCH = 0x3B,
-    AUTOMATIONREAD = 0x4A,
-    AUTOMATIONWRITE = 0x4B,
+    AUTOMATION_READ = 0x4A,
+    AUTOMATION_WRITE = 0x4B,
     LOOP = 0x56,
-    TOSTART = 0x58,
-    TOEND = 0x5A,
+    TO_START = 0x58,
+    TO_END = 0x5A,
     REWIND = 0x5B,
     FORWARD = 0x5C,
     STOP = 0x5D,
     PLAY = 0x5E,
     RECORD = 0x5F,
-    FADERTOUCH = 0x68,
-    EQENABLE1 = 0x70,
-    EQENABLE2 = 0x71,
-    EQENABLE3 = 0x72,
-    EQENABLE4 = 0x73,
-    EQTYPE = 0x74,
-    ALLBYPASS = 0x75,
+    FADER_TOUCH = 0x68,
+    EQ_ENABLE1 = 0x70,
+    EQ_ENABLE2 = 0x71,
+    EQ_ENABLE3 = 0x72,
+    EQ_ENABLE4 = 0x73,
+    EQ_TYPE = 0x74,
+    ALL_BYPASS = 0x75,
     JOG = 0x76,
     LOCK = 0x77,
-    INPUTMONITOR = 0x78,
-    OPENVSTI = 0x79
+    INPUT_MONITOR = 0x78,
+    OPEN_VSTI = 0x79
 }
 
 -- MIDI CC numbers (knobs / encoders)
 CC = {
     PAN = 0x10,
-    EQQ1 = 0x20,
-    EQQ2 = 0x21,
-    EQQ3 = 0x22,
-    EQQ4 = 0x23,
-    EQFREQUENCY1 = 0x30,
-    EQFREQUENCY2 = 0x31,
-    EQFREQUENCY3 = 0x32,
-    EQFREQUENCY4 = 0x33,
-    EQGAIN1 = 0x40,
-    EQGAIN2 = 0x41,
-    EQGAIN3 = 0x42,
-    EQGAIN4 = 0x43,
+    EQ_Q1 = 0x20,
+    EQ_Q2 = 0x21,
+    EQ_Q3 = 0x22,
+    EQ_Q4 = 0x23,
+    EQ_FREQUENCY1 = 0x30,
+    EQ_FREQUENCY2 = 0x31,
+    EQ_FREQUENCY3 = 0x32,
+    EQ_FREQUENCY4 = 0x33,
+    EQ_GAIN1 = 0x40,
+    EQ_GAIN2 = 0x41,
+    EQ_GAIN3 = 0x42,
+    EQ_GAIN4 = 0x43,
     VALUE = 0x50,
-    AIKNOB = 0x3C
+    AI_KNOB = 0x3C
 }
 
 KEYCMD = {
-    -- Automation
-    VIEW_AUTOMATION = 116,
-    VIEW_FLEX       = 1753,
-    AUTO = 1015,
-    AUTOSELECT = 1378,
-    AUTOMONITORING = 694,
+    -- Transport
+    LOOP = 15,
+    REWIND = 10,
+    FORWARD = 11,
+    STOP = 5,
+    PLAY = 3,
+    RECORD = 7,
+    PLAY_TOGGLE = 535,
+    PLAY_STOP_RETURN = 1270,
+    RECORD_TOGGLE = 2,
+    OVERDUB = 20,
+    AUTO_PUNCH = 16,
+
+    -- Locators
+    SET_L = 507,
+    SET_R = 508,
+    GOTO_L = 480,
+    GOTO_R = 481,
+    GOTO_START = 1222,
+    GOTO_END = 1241,
+
+    -- Loop / cycle
+    CYCLE = 15,
+    PRE_COUNT = 1291,
+    LOOP_BACK = 700,
+    LOOP_FWD = 699,
+    LOOP_SELECTION = 100,
 
     -- Track selection
-    TRACKLEFT = 1272, -- Select Previous Track
-    TRACKRIGHT = 1273, -- Select Next Track
+    TRACK_LEFT = 1272,
+    TRACK_RIGHT = 1273,
+    PREV_PATCH = 1213,
+    NEXT_PATCH = 1212,
+    PREV_CHANNEL_SETTING = 1215,
+    NEXT_CHANNEL_SETTING = 1214,
 
-    -- Transport / workflow
-    CAPTURE_MIDI = 542, -- Capture as Recording
-    QUANTIZE = 110, -- Quantize Selected Regions/Cells/Events
-    CLICK = 474, -- Toggle Metronome Click
-    UNDO = 761, -- Undo
-    REDO = 796, -- Redo
+    -- Markers
+    PREV_MARKER = 1330,
+    NEXT_MARKER = 1329,
+    ADD_MARKER = 513,
+    DELETE_MARKER = 514,
 
-    PLAY_TOGGLE = 535, -- Play or Stop
-    STOP = 5, -- Stop
-    RECORD = 7, -- Record
-    CYCLE = 15,   -- Cycle Mode
-    PLUG_INS = 1255 -- Show/Hide Plug-ins
+    -- Workflow
+    CLICK = 474,
+    UNDO = 761,
+    REDO = 796,
+    TAP_TEMPO = 532,
+    CAPTURE_MIDI = 542,
+    PLAY_SELECTION = 544,
+
+    -- Quantize
+    QUANTIZE = 110,
+    UNDO_QUANTIZE = 381,
+    QUANTIZE_SELECTION = 965,
+
+    -- Views
+    TOGGLE_BROWSE = 749,
+    TOGGLE_INST = 2397,
+    TOGGLE_MIXER = 735,
+    TOGGLE_SMART = 1296,
+    TOGGLE_LOOPS = 748,
+
+    -- Plug-ins
+    PLUG_INS = 1255,
+    TOGGLE_ALL_PLUGINS = 1255,
+    CLOSE_ALL_PLUGINS = 1366,
+    OPEN_INSERT1 = 2454,
+    BYPASS_ALL = 1248,
+
+    -- Zoom
+    ZOOM_IN = 42,
+    ZOOM_OUT = 41,
+    ZOOM_IN_V = 44,
+    ZOOM_OUT_V = 43,
+    REWIND_BY_NUDGE = 2594,
+    FORWARD_BY_NUDGE = 2595,
+
+    -- Track controls
+    ARP = 1237,
+    ARM = 593,
+    MUTE = 1231,
+    SOLO = 1232,
+    ALL_ARM_OFF = 1042,
+    ALL_MUTE_OFF = 1041,
+    TOGGLE_ALL_SOLO = 1040,
+    LEARN = 3096,
+
+    -- Automation
+    VIEW_AUTOMATION = 116,
+    VIEW_FLEX = 1753,
+    AUTO = 1015,
+    AUTO_SELECT = 1378,
+    AUTO_MONITORING = 694,
+    ADD_AUTOMATION = 2257,
+
+    -- Clips / Scenes
+    CLIP_RECORD = 1334,
+    CLIPS_VIEW = 1376,
+    LAUNCHER_VIEW = 1394,
+    ARRANGER_VIEW = 1395,
+    TRIGGER_SELECTED_CLIP = 2577,
+    CREATE_CLIP = 149,
+    CREATE_SCENE = 2808,
+    PREV_SCENE = 2700,
+    NEXT_SCENE = 2701,
+    TRIGGER_SELECTED_SCENE = 2807,
+    PERFORMANCE_RECORD = 2800,
+    STOP_ALL_CLIPS = 2593,
+    RETURN_TO_ARRANGER = 1337,
+    CREATE_SCENE_FROM_CLIPS = 2809,
+    CREATE_SCENE_FROM_LOOP = 1398,
+
+    -- Edit
+    CUT = 762,
+    COPY = 763,
+    PASTE = 764,
+    DELETE = 765,
+
+    -- Misc
+    VIEW_SENDS = 2047,
+    INC_LAST_PARAM_BY1 = 879,
+    DEC_LAST_PARAM_BY1 = 880,
+    INC_LAST_PARAM_BY10 = 881,
+    DEC_LAST_PARAM_BY10 = 882,
 }
 
 TRACKPARAM = {
@@ -150,7 +251,7 @@ function controller_info()
                 objectType = "VFader",
                 midiType = "Absolute",
                 valueMode = kAssignScaled,
-                midiTouched = { 0x90, NOTE.FADERTOUCH, MIDI_LSB },
+                midiTouched = { 0x90, NOTE.FADER_TOUCH, MIDI_LSB },
                 hasFeedback = true,
                 hasFeedbackValueText = true,
                 inport = PORT_IN,
@@ -203,7 +304,7 @@ function controller_info()
                 midiType = "Momentary",
                 inport = PORT_IN,
                 outport = PORT_OUT,
-                midi = { 0x90, NOTE.INPUTMONITOR, MIDI_LSB }
+                midi = { 0x90, NOTE.INPUT_MONITOR, MIDI_LSB }
             },
 
             -- Record Arm
@@ -215,7 +316,7 @@ function controller_info()
                 midiType = "Momentary",
                 inport = PORT_IN,
                 outport = PORT_OUT,
-                midi = { 0x90, NOTE.RECORDARM, MIDI_LSB }
+                midi = { 0x90, NOTE.RECORD_ARM, MIDI_LSB }
             },
 
             -- Automation Read
@@ -227,7 +328,7 @@ function controller_info()
                 midiType = "Momentary",
                 inport = PORT_IN,
                 outport = PORT_OUT,
-                midi = { 0x90, NOTE.AUTOMATIONREAD, MIDI_LSB }
+                midi = { 0x90, NOTE.AUTOMATION_READ, MIDI_LSB }
             },
 
             -- Automation Write
@@ -239,7 +340,7 @@ function controller_info()
                 midiType = "Momentary",
                 inport = PORT_IN,
                 outport = PORT_OUT,
-                midi = { 0x90, NOTE.AUTOMATIONWRITE, MIDI_LSB }
+                midi = { 0x90, NOTE.AUTOMATION_WRITE, MIDI_LSB }
             },
 
             -- Channel Select Left
@@ -251,7 +352,7 @@ function controller_info()
                 midiType = "Momentary",
                 inport = PORT_IN,
                 outport = PORT_OUT,
-                midi = { 0x90, NOTE.CHANNELSELECTLEFT, MIDI_LSB }
+                midi = { 0x90, NOTE.CHANNEL_SELECT_LEFT, MIDI_LSB }
             },
 
             -- Channel Select Right
@@ -263,7 +364,7 @@ function controller_info()
                 midiType = "Momentary",
                 inport = PORT_IN,
                 outport = PORT_OUT,
-                midi = { 0x90, NOTE.CHANNELSELECTRIGHT, MIDI_LSB }
+                midi = { 0x90, NOTE.CHANNEL_SELECT_RIGHT, MIDI_LSB }
             },
 
             -- Transport buttons
@@ -334,7 +435,7 @@ function controller_info()
                 midiType = "RelativeSM",
                 inport = PORT_IN,
                 outport = PORT_OUT,
-                midi = { 0xB0, CC.AIKNOB, MIDI_LSB }
+                midi = { 0xB0, CC.AI_KNOB, MIDI_LSB }
             },
 
             -- The physical E-Button
@@ -349,7 +450,7 @@ function controller_info()
                 hasFeedback = true,
                 maxVal = 127,
                 valueMode = kAssignRotate,
-                midi = { 0x90, NOTE.EBUTTON, MIDI_LSB }
+                midi = { 0x90, NOTE.E_BUTTON, MIDI_LSB }
             },
 
             -- Open VST button
@@ -361,7 +462,7 @@ function controller_info()
                 midiType = "Momentary",
                 inport = PORT_IN,
                 outport = PORT_OUT,
-                midi = { 0x90, NOTE.OPENVSTI, MIDI_LSB }
+                midi = { 0x90, NOTE.OPEN_VSTI, MIDI_LSB }
             },
 
         },
@@ -377,8 +478,8 @@ function controller_info()
             { zone = 'CC121: Global' },
 
             -- Channel Select (always active, not mode-dependent)
-            { control = "ChanLeft", keyCmd = KEYCMD.TRACKLEFT },
-            { control = "ChanRight", keyCmd = KEYCMD.TRACKRIGHT },
+            { control = "ChanLeft", keyCmd = KEYCMD.TRACK_LEFT },
+            { control = "ChanRight", keyCmd = KEYCMD.TRACK_RIGHT },
 
             ----------------------------------------------------------------
             -- AI KNOB ZONE: modes for the AI knob (Global vs Jog)
@@ -387,13 +488,13 @@ function controller_info()
 
             -- MODE: Global — AI knob controls plugin parameter
             { mode = MODE.ai },
-            { control = 'Jog', setMode=MODE.jog, feedbackVal = 0 },
+            { control = 'Jog', setMode = MODE.jog, feedbackVal = 0 },
             --{ control = "AI", CSTrack = 0, trackParam = CS_PLUGINPAR1, paramName = "@tp,@tn" },
-            {control='AI', globalObj=AGL_HORIZONTALZOOM },
+            { control = 'AI', globalObj = AGL_HORIZONTALZOOM },
 
             -- MODE: Jog — AI knob controls scrub/jog
             { mode = MODE.jog },
-            { control = 'Jog', setMode=MODE.ai, feedbackVal = 1 },
+            { control = 'Jog', setMode = MODE.ai, feedbackVal = 1 },
             { control = "AI", globalObj = AGL_SCRUB, clockPart = ACP_FORMAT,
               valueMode = kAssignRelative, paramName = "Scrub" },
 
@@ -402,19 +503,19 @@ function controller_info()
             ----------------------------------------------------------------
             { zone = 'CC121: Mixer' },
 
-            { control = "Fader",  CSTrack = 0, trackParam = AUVOLUME,  paramName = "@tn Level" },
-            { control = "Pan",    CSTrack = 0, trackParam = AUPAN,     paramName = "@tn Pan" },
-            { control = "Mute",   CSTrack = 0, trackParam = AUMUTE,    paramName = "@tn Mute" },
-            { control = "Solo",   CSTrack = 0, trackParam = AUSOLO,    paramName = "@tn Solo" },
+            { control = "Fader", CSTrack = 0, trackParam = AUVOLUME, paramName = "@tn Level" },
+            { control = "Pan", CSTrack = 0, trackParam = AUPAN, paramName = "@tn Pan" },
+            { control = "Mute", CSTrack = 0, trackParam = AUMUTE, paramName = "@tn Mute" },
+            { control = "Solo", CSTrack = 0, trackParam = AUSOLO, paramName = "@tn Solo" },
             { control = "InputMonitor", CSTrack = 0, trackParam = TRACKPARAM.INPUT_MON, paramName = "@tn Input Monitor" },
             { control = "RecArm", CSTrack = 0, trackParam = CS_RECRDY, paramName = "@tn Rec Ready" },
             { control = "OpenVST", keyCmd = KEYCMD.PLUG_INS },
 
             -- This toggles On/Off selected track automation and put it in Read mode
-            { control = "Read",   CSTrack = 0, trackParam = CS_AUTO, valueMode = kAssignToggle, minVal = 1, multiply = 1, paramName = '@tn Read' },
+            { control = "Read", CSTrack = 0, trackParam = CS_AUTO, valueMode = kAssignToggle, minVal = 1, multiply = 1, paramName = '@tn Read' },
 
             -- This toggles between Read/Latch automation for the selected track
-            { control = "Write", keyCmd = KEYCMD.AUTO  },
+            { control = "Write", keyCmd = KEYCMD.AUTO },
 
             -- Automation write mode - we dont want this, leaving it for reference
             --{ control = "Write",  CSTrack = 0, trackParam = CS_AUTO, valueMode = kAssignDirect, paramName = 'Automation ' },
@@ -435,17 +536,17 @@ function controller_info()
             ----------------------------------------------------------------
             { zone = 'CC121: View Toggle' },
 
-            { control = "EBUTTON", group = "ViewCycle", valueMode = kAssignRotate, setMode=MODE.viewOff },
+            { control = "EBUTTON", group = "ViewCycle", valueMode = kAssignRotate, setMode = MODE.viewOff },
 
             -- When in Automation Mode: EBUTTON press triggers Automation Key Command
-            { mode=MODE.viewAuto },
+            { mode = MODE.viewAuto },
             { control = "EBUTTON", keyCmd = KEYCMD.VIEW_AUTOMATION, group = "ViewCycle", feedbackVal = 2 },
 
             -- When in Flex Mode: EBUTTON press triggers Flex Key Command
-            { mode=MODE.viewFlex },
+            { mode = MODE.viewFlex },
             { control = "EBUTTON", keyCmd = KEYCMD.VIEW_FLEX, group = "ViewCycle", feedbackVal = 3 },
 
-            { mode=MODE.viewOff },
+            { mode = MODE.viewOff },
             { control = "EBUTTON", keyCmd = KEYCMD.VIEW_FLEX, group = "ViewCycle", feedbackVal = 0 },
 
         }
