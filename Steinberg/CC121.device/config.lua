@@ -206,6 +206,69 @@ TRACKPARAM = {
     INPUT_MON = 266 -- Toggle input monitor
 }
 
+----------------------------------------------------------------
+-- Bound plugin identifiers for use with CS_BOUNDPLUGINPAR1
+--
+-- Usage:
+--   { control = 'X', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1,
+--     paramOffset = N, boundManuf = BOUND_MANUF.EMAG,
+--     boundSubID = 0,  boundPlugInID = BOUND_ID.CHANNEL_EQ }
+--
+-- For third-party AUs, boundSubID and boundPlugInID come from:
+--   auval -a | grep 'Plugin Name'
+--   output: TYPE  SUBTYPE  MANUF
+--   boundManuf = 'MANUF', boundSubID = 'TYPE', boundPlugInID = 'SUBTYPE'
+----------------------------------------------------------------
+
+-- Manufacturer codes
+BOUND_MANUF = {
+    EMAG = 'EMAG',   -- Emagic/Logic native (old)
+    CLEM = 'CLEM',   -- Logic native (newer)
+    APPL = 'appl',   -- Apple standard AU
+}
+
+-- boundPlugInID values for Logic-native EMAG plugins
+-- boundSubID = 0 for all of these
+BOUND_ID = {
+    -- Channel strip effects
+    CHANNEL_EQ          = 236,
+
+    -- Synthesizers (Emagic era)
+    ES1                 = 189,
+    ES_M                = 201,
+    ES_P                = 202,
+    ES_E                = 203,
+    ES2                 = 214,
+    EFM1                = 219,
+    EVOC_20_PS          = 220,
+    SCULPTURE           = 222,
+
+    -- Vintage instruments
+    VINTAGE_ELECTRIC_PIANO = 213,
+    VINTAGE_B3_ORGAN    = 216,
+    VINTAGE_CLAV        = 223,
+
+    -- Modern instruments
+    RETRO_SYNTH         = 279,
+    DRUM_SYNTH          = 281,
+    ULTRABEAT           = 238,
+    ALCHEMY             = 313,
+}
+
+-- boundPlugInID values for Logic-native CLEM plugins
+-- boundSubID = 0 unless noted
+BOUND_ID_CLEM = {
+    DRUM_KIT_DESIGNER   = 1095650636,   -- 'ANML'
+    EXS24               = 1396788529,   -- 'SAM1'
+    SAMPLER             = 1396788529,   -- 'SAM1' (same as EXS24)
+    QUICK_SAMPLER       = 1347375956,   -- 'PRRT'
+    -- Mellotron/Studio Strings/Horns share plugInID, differ by boundSubID
+    VINTAGE_MELLOTRON   = 1231968114,   -- 'InWr', boundSubID = 1
+    STUDIO_STRINGS      = 1231968114,   -- 'InWr', boundSubID = 2
+    STUDIO_HORNS        = 1231968114,   -- 'InWr', boundSubID = 3
+}
+
+
 --
 -- Control IDs
 --
@@ -227,6 +290,14 @@ local kControlIDJog = 14
 local kControlIDAI = 15
 local kControlIDE = 16
 local kControlIDVst = 17
+local kControlIDLoQQ = 18
+local kControlIDLoFreq = 19
+local kControlIDLoGain = 20
+local kControlIDLoEnable = 21
+local kControlIDLoMidQQ = 22
+local kControlIDLoMidFreq = 23
+local kControlIDLoMidGain = 24
+local kControlIDLoMidEnable = 25
 
 ---
 -- Controller info
@@ -465,6 +536,109 @@ function controller_info()
                 midi = { 0x90, NOTE.OPEN_VSTI, MIDI_LSB }
             },
 
+            -- EQ Buttons
+            -- Lo EQ Q
+            {
+                name = "LoEqQ",
+                label = "Lo EQ Q",
+                controlID = kControlIDLoQQ,
+                objectType = "Knob",
+                midiType = "RelativeSM",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0xB0, CC.EQ_Q1, MIDI_LSB }
+            },
+            -- Lo EQ Frequency
+            {
+                name = "LoEqFreq",
+                label = "Lo EQ Frequency",
+                controlID = kControlIDLoFreq,
+                objectType = "Knob",
+                midiType = "RelativeSM",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0xB0, CC.EQ_FREQUENCY1, MIDI_LSB }
+            },
+            -- Lo EQ Gain
+            {
+                name = "LoEqGain",
+                label = "Lo EQ Gain",
+                controlID = kControlIDLoGain,
+                objectType = "Knob",
+                midiType = "RelativeSM",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0xB0, CC.EQ_GAIN1, MIDI_LSB }
+            },
+            -- Lo EQ Enable
+            {
+                name = "LoEqEnable",
+                label = "Lo EQ Enable",
+                controlID = kControlIDLoEnable,
+                objectType = "Button",
+                midiType = "Momentary",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0x90, NOTE.EQ_ENABLE1, MIDI_LSB }
+            },
+
+            -- Lo Mid EQ Q
+            {
+                name = "LoMidEqQ",
+                label = "Lo Mid EQ Q",
+                controlID = kControlIDLoMidQQ,
+                objectType = "Knob",
+                midiType = "RelativeSM",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0xB0, CC.EQ_Q2, MIDI_LSB }
+            },
+            -- Lo Mid EQ Frequency
+            {
+                name = "LoMidEqFreq",
+                label = "Lo Mid EQ Frequency",
+                controlID = kControlIDLoMidFreq,
+                objectType = "Knob",
+                midiType = "RelativeSM",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0xB0, CC.EQ_FREQUENCY2, MIDI_LSB }
+            },
+            -- Lo Mid EQ Gain
+            {
+                name = "LoMidEqGain",
+                label = "Lo Mid EQ Gain",
+                controlID = kControlIDLoMidGain,
+                objectType = "Knob",
+                midiType = "RelativeSM",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0xB0, CC.EQ_GAIN2, MIDI_LSB }
+            },
+            -- Lo Mid EQ Enable
+            {
+                name = "LoMidEqEnable",
+                label = "Lo Mid EQ Enable",
+                controlID = kControlIDLoMidEnable,
+                objectType = "Button",
+                midiType = "Momentary",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0x90, NOTE.EQ_ENABLE2, MIDI_LSB }
+            },
+
+
+
+            -- Hi Mid EQ Q
+            -- Hi Mid EQ Frequency
+            -- Hi Mid EQ Gain
+            -- Hi Mid EQ Enable
+
+            -- Hi EQ Q
+            -- Hi EQ Frequency
+            -- Hi EQ Gain
+            -- Hi EQ Enable
+
         },
 
         --
@@ -548,6 +722,22 @@ function controller_info()
 
             { mode = MODE.viewOff },
             { control = "EBUTTON", keyCmd = KEYCMD.VIEW_FLEX, group = "ViewCycle", feedbackVal = 0 },
+
+            ----------------------------------------------------------------
+            -- EQ ZONE
+            -- Band numbering: Lo=1, LoMid=2, HiMid=3, Hi=4
+            ----------------------------------------------------------------
+            { zone = 'CC121: EQ' },
+
+            -- Lo Cut
+            { control = 'LoEqQ', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 3,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Low Cut Q-Factor' },
+            { control = 'LoEqFreq', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 1,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Low Cut Frequency' },
+            { control = 'LoEqGain', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 2,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Low Cut Slope' },
+            { control = 'LoEqEnable', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 0,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Low Cut On/Off' }
 
         }
     }
