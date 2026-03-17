@@ -738,6 +738,7 @@ function controller_info()
                 objectType = "Button",
                 midiType = "Momentary",
                 hasFeedback = true,
+                maxVal=1,
                 inport = PORT_IN,
                 outport = PORT_OUT,
                 midi = { 0x90, NOTE.EQ_TYPE, MIDI_LSB }
@@ -835,7 +836,7 @@ function controller_info()
 
             -- Default MODE: Eq Bank 1
             { mode = MODE.eqBank1 },
-            { control = 'EqType', setMode = MODE.eqBank2 },
+            { control = 'EqType', setMode = MODE.eqBank2, feedbackVal = 0 },
 
             -- Lo Cut
             { control = 'LoEqQ', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 3, localResolution = 127,
@@ -879,7 +880,7 @@ function controller_info()
 
             -- MODE: Eq Bank 2
             { mode = MODE.eqBank2 },
-            { control = 'EqType', setMode = MODE.eqBank1 },
+            { control = 'EqType', setMode = MODE.eqBank1, feedbackVal = 4 },
 
             -- Low Shelf
             { control = 'LoEqQ', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 7, localResolution = 127,
