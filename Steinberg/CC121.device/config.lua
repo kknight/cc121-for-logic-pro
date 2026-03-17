@@ -730,11 +730,11 @@ function controller_info()
             { zone = 'CC121: EQ' },
 
             -- Lo Cut
-            { control = 'LoEqQ', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 3,
+            { control = 'LoEqQ', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 3, localResolution = 127,
               boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Low Cut Q-Factor' },
-            { control = 'LoEqFreq', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 1,
+            { control = 'LoEqFreq', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 1, localResolution = 127,
               boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Low Cut Frequency' },
-            { control = 'LoEqGain', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 2,
+            { control = 'LoEqGain', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 2, localResolution = 127,
               boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Low Cut Slope' },
             { control = 'LoEqEnable', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 0,
               boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Low Cut On/Off' }
