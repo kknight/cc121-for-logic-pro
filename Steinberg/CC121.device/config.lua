@@ -13,6 +13,10 @@ local MODE = {
     viewAuto = 'Auto',
     viewFlex = 'Flex',
     viewOff = 'Off',
+
+    -- EQ banks
+    eqBank1 = 'EQ1',
+    eqBank2 = 'EQ2',
 }
 
 --
@@ -306,6 +310,7 @@ local kControlIDHiQQ = 30
 local kControlIDHiFreq = 31
 local kControlIDHiGain = 32
 local kControlIDHiEnable = 33
+local kControlIDEqType = 34
 
 ---
 -- Controller info
@@ -725,6 +730,19 @@ function controller_info()
                 midi = { 0x90, NOTE.EQ_ENABLE4, MIDI_LSB }
             },
 
+            -- EQ Type Btn
+            {
+                name = "EqType",
+                label = "EQ Type",
+                controlID = kControlIDEqType,
+                objectType = "Button",
+                midiType = "Momentary",
+                hasFeedback = true,
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0x90, NOTE.EQ_TYPE, MIDI_LSB }
+            },
+
         },
 
         --
@@ -815,6 +833,10 @@ function controller_info()
             ----------------------------------------------------------------
             { zone = 'CC121: EQ' },
 
+            -- Default MODE: Eq Bank 1
+            { mode = MODE.eqBank1 },
+            { control = 'EqType', setMode = MODE.eqBank2 },
+
             -- Lo Cut
             { control = 'LoEqQ', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 3, localResolution = 127,
               boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Low Cut Q-Factor' },
@@ -854,6 +876,51 @@ function controller_info()
               boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Hi Shelf Slope' },
             { control = 'HiEqEnable', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 24,
               boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Hi Shelf On/Off' },
+
+            -- MODE: Eq Bank 2
+            { mode = MODE.eqBank2 },
+            { control = 'EqType', setMode = MODE.eqBank1 },
+
+            -- Low Shelf
+            { control = 'LoEqQ', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 7, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Low Shelf Q-Factor' },
+            { control = 'LoEqFreq', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 5, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Low Shelf Frequency' },
+            { control = 'LoEqGain', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 6, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Low Shelf Slope' },
+            { control = 'LoEqEnable', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 4,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Low Shelf On/Off' },
+
+            -- Peak 2
+            { control = 'LoMidEqQ', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 15, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Peak 2 Q-Factor' },
+            { control = 'LoMidEqFreq', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 13, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Peak 2 Frequency' },
+            { control = 'LoMidEqGain', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 14, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Peak 2 Slope' },
+            { control = 'LoMidEqEnable', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 12,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Peak 2 On/Off' },
+
+            -- Peak 4
+            { control = 'HiMidEqQ', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 23, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Peak 4 Q-Factor' },
+            { control = 'HiMidEqFreq', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 21, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Peak 4 Frequency' },
+            { control = 'HiMidEqGain', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 22, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Peak 4 Slope' },
+            { control = 'HiMidEqEnable', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 20,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Peak 4 On/Off' },
+
+            -- Hi Cut
+            { control = 'HiEqQ', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 31, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Hi Cut Q-Factor' },
+            { control = 'HiEqFreq', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 29, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Hi Cut Frequency' },
+            { control = 'HiEqGain', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 30, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Hi Cut Slope' },
+            { control = 'HiEqEnable', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 28,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Hi Cut On/Off' },
+
         }
     }
 end
