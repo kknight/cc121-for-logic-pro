@@ -298,6 +298,14 @@ local kControlIDLoMidQQ = 22
 local kControlIDLoMidFreq = 23
 local kControlIDLoMidGain = 24
 local kControlIDLoMidEnable = 25
+local kControlIDHiMidQQ = 26
+local kControlIDHiMidFreq = 27
+local kControlIDHiMidGain = 28
+local kControlIDHiMidEnable = 29
+local kControlIDHiQQ = 30
+local kControlIDHiFreq = 31
+local kControlIDHiGain = 32
+local kControlIDHiEnable = 33
 
 ---
 -- Controller info
@@ -627,17 +635,95 @@ function controller_info()
                 midi = { 0x90, NOTE.EQ_ENABLE2, MIDI_LSB }
             },
 
-
-
             -- Hi Mid EQ Q
+            {
+                name = "HiMidEqQ",
+                label = "Hi Mid EQ Q",
+                controlID = kControlIDHiMidQQ,
+                objectType = "Knob",
+                midiType = "RelativeSM",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0xB0, CC.EQ_Q3, MIDI_LSB }
+            },
             -- Hi Mid EQ Frequency
+            {
+                name = "HiMidEqFreq",
+                label = "Hi Mid EQ Frequency",
+                controlID = kControlIDHiMidFreq,
+                objectType = "Knob",
+                midiType = "RelativeSM",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0xB0, CC.EQ_FREQUENCY3, MIDI_LSB }
+            },
             -- Hi Mid EQ Gain
+            {
+                name = "HiMidEqGain",
+                label = "Hi Mid EQ Gain",
+                controlID = kControlIDHiMidGain,
+                objectType = "Knob",
+                midiType = "RelativeSM",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0xB0, CC.EQ_GAIN3, MIDI_LSB }
+            },
             -- Hi Mid EQ Enable
+            {
+                name = "HiMidEqEnable",
+                label = "Hi Mid EQ Enable",
+                controlID = kControlIDHiMidEnable,
+                objectType = "Button",
+                midiType = "Momentary",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0x90, NOTE.EQ_ENABLE3, MIDI_LSB }
+            },
 
             -- Hi EQ Q
+            {
+                name = "HiEqQ",
+                label = "Hi EQ Q",
+                controlID = kControlIDHiQQ,
+                objectType = "Knob",
+                midiType = "RelativeSM",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0xB0, CC.EQ_Q4, MIDI_LSB }
+            },
             -- Hi EQ Frequency
+            {
+                name = "HiEqFreq",
+                label = "Hi EQ Frequency",
+                controlID = kControlIDHiFreq,
+                objectType = "Knob",
+                midiType = "RelativeSM",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0xB0, CC.EQ_FREQUENCY4, MIDI_LSB }
+            },
             -- Hi EQ Gain
+            {
+                name = "HiEqGain",
+                label = "Hi EQ Gain",
+                controlID = kControlIDHiGain,
+                objectType = "Knob",
+                midiType = "RelativeSM",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0xB0, CC.EQ_GAIN4, MIDI_LSB }
+            },
             -- Hi EQ Enable
+            {
+                name = "HiEqEnable",
+                label = "Hi EQ Enable",
+                controlID = kControlIDHiEnable,
+                objectType = "Button",
+                midiType = "Momentary",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0x90, NOTE.EQ_ENABLE4, MIDI_LSB }
+            },
 
         },
 
@@ -737,8 +823,37 @@ function controller_info()
             { control = 'LoEqGain', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 2, localResolution = 127,
               boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Low Cut Slope' },
             { control = 'LoEqEnable', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 0,
-              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Low Cut On/Off' }
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Low Cut On/Off' },
 
+            -- Peak 1
+            { control = 'LoMidEqQ', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 11, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Peak 1 Q-Factor' },
+            { control = 'LoMidEqFreq', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 9, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Peak 1 Frequency' },
+            { control = 'LoMidEqGain', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 10, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Peak 1 Slope' },
+            { control = 'LoMidEqEnable', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 8,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Peak 1 On/Off' },
+
+            -- Peak 3
+            { control = 'HiMidEqQ', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 19, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Peak 3 Q-Factor' },
+            { control = 'HiMidEqFreq', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 17, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Peak 3 Frequency' },
+            { control = 'HiMidEqGain', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 18, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Peak 3 Slope' },
+            { control = 'HiMidEqEnable', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 16,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Peak 3 On/Off' },
+
+            -- Hi Shelf
+            { control = 'HiEqQ', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 27, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Hi Shelf Q-Factor' },
+            { control = 'HiEqFreq', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 25, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Hi Shelf Frequency' },
+            { control = 'HiEqGain', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 26, localResolution = 127,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Hi Shelf Slope' },
+            { control = 'HiEqEnable', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 24,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Hi Shelf On/Off' },
         }
     }
 end
