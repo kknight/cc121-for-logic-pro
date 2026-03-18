@@ -311,6 +311,10 @@ local kControlIDHiFreq = 31
 local kControlIDHiGain = 32
 local kControlIDHiEnable = 33
 local kControlIDEqType = 34
+local kControlIDToStart = 35
+local kControlIDToEnd = 36
+local kControlIDRewind = 37
+local kControlIDForward = 38
 
 ---
 -- Controller info
@@ -744,6 +748,54 @@ function controller_info()
                 midi = { 0x90, NOTE.EQ_TYPE, MIDI_LSB }
             },
 
+            -- To Start button
+            {
+                name = "ToStart",
+                label = "To Start",
+                controlID = kControlIDToStart,
+                objectType = "Button",
+                midiType = "Momentary",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0x90, NOTE.TO_START, MIDI_LSB }
+            },
+
+            -- To End button
+            {
+                name = "ToEnd",
+                label = "To End",
+                controlID = kControlIDToEnd,
+                objectType = "Button",
+                midiType = "Momentary",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0x90, NOTE.TO_END, MIDI_LSB }
+            },
+
+            -- Rewind
+            {
+                name = "Rewind",
+                label = "Rewind",
+                controlID = kControlIDRewind,
+                objectType = "Button",
+                midiType = "Momentary",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0x90, NOTE.REWIND, MIDI_LSB }
+            },
+
+            -- Forward
+            {
+                name = "Forward",
+                label = "Forward",
+                controlID = kControlIDForward,
+                objectType = "Button",
+                midiType = "Momentary",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0x90, NOTE.FORWARD, MIDI_LSB }
+            }
+
         },
 
         --
@@ -769,13 +821,13 @@ function controller_info()
             { mode = MODE.ai },
             { control = 'Jog', setMode = MODE.jog, feedbackVal = 0 },
             --{ control = "AI", CSTrack = 0, trackParam = CS_PLUGINPAR1, paramName = "@tp,@tn" },
-            { control = 'AI', globalObj = AGL_HORIZONTALZOOM },
+            { control = 'AI', globalObj = AGL_HORIZONTALZOOM, localResolution = 127 },
 
             -- MODE: Jog — AI knob controls scrub/jog
             { mode = MODE.jog },
             { control = 'Jog', setMode = MODE.ai, feedbackVal = 1 },
             { control = "AI", globalObj = AGL_SCRUB, clockPart = ACP_FORMAT,
-              valueMode = kAssignRelative, paramName = "Scrub" },
+              valueMode = kAssignRelative, paramName = "Scrub", localResolution = 127 },
 
             ----------------------------------------------------------------
             -- MIXER ZONE: always-active, no modes
@@ -809,6 +861,10 @@ function controller_info()
             { control = "Stop", keyCmd = KEYCMD.STOP },
             { control = "Record", keyCmd = KEYCMD.RECORD },
             { control = "Loop", keyCmd = KEYCMD.CYCLE },
+            { control = "Rewind", keyCmd = KEYCMD.REWIND },
+            { control = "Forward", keyCmd = KEYCMD.FORWARD },
+            { control = "ToStart", keyCmd = KEYCMD.PREV_MARKER },
+            { control = "ToEnd", keyCmd = KEYCMD.NEXT_MARKER },
 
             ----------------------------------------------------------------
             -- VIEW TOGGLE ZONE (The Rotate Logic)
