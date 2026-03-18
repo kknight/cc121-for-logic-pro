@@ -272,6 +272,22 @@ BOUND_ID_CLEM = {
     STUDIO_HORNS        = 1231968114,   -- 'InWr', boundSubID = 3
 }
 
+function dumpGlobals()
+    local result = ""
+    for k, v in pairs(_G) do
+        local vtype = type(v)
+        if vtype == "number" or vtype == "string" or vtype == "boolean" then
+            result = result .. k .. "=" .. tostring(v) .. "\n"
+        elseif vtype == "table" then
+            result = result .. k .. "=(table)\n"
+        elseif vtype == "function" then
+            result = result .. k .. "=(function)\n"
+        end
+    end
+    print(result)
+end
+
+dumpGlobals()
 
 --
 -- Control IDs
@@ -315,6 +331,7 @@ local kControlIDToStart = 35
 local kControlIDToEnd = 36
 local kControlIDRewind = 37
 local kControlIDForward = 38
+local kControlIDAllBypass = 39
 
 ---
 -- Controller info
@@ -794,6 +811,17 @@ function controller_info()
                 inport = PORT_IN,
                 outport = PORT_OUT,
                 midi = { 0x90, NOTE.FORWARD, MIDI_LSB }
+            },
+            -- All Bypass button
+            {
+                name = "AllBypass",
+                label = "Bypass EQ",
+                controlID = kControlIDAllBypass,
+                objectType = "Button",
+                midiType = "Momentary",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0x90, NOTE.ALL_BYPASS, MIDI_LSB }
             }
 
         },
@@ -890,6 +918,10 @@ function controller_info()
             ----------------------------------------------------------------
             { zone = 'CC121: EQ' },
 
+            { control = 'AllBypass', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 32,
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ,
+              paramName = '' },
+
             -- Default MODE: Eq Bank 1
             { mode = MODE.eqBank1 },
             { control = 'EqType', setMode = MODE.eqBank2, feedbackVal = 0 },
@@ -976,7 +1008,7 @@ function controller_info()
             { control = 'HiEqGain', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 30, localResolution = 127,
               boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Hi Cut Slope' },
             { control = 'HiEqEnable', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 28,
-              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Hi Cut On/Off' },
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Hi Cut On/Off' }
 
         }
     }
