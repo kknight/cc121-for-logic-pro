@@ -343,6 +343,8 @@ function controller_info()
         copyright = "©2026 Kristjan Knight",
         version = 105,
 
+        usb_vendor_id  = 1177,
+        usb_product_id = 4177,
 
         --
         -- MIDI device setup
@@ -918,9 +920,7 @@ function controller_info()
             ----------------------------------------------------------------
             { zone = 'CC121: EQ' },
 
-            { control = 'AllBypass', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 32,
-              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ,
-              paramName = '' },
+            { control = 'AllBypass', CSTrack = 0, trackParam = AUBYPASSPLUG1, paramName = "@tn EQ Bypass" },
 
             -- Default MODE: Eq Bank 1
             { mode = MODE.eqBank1 },
