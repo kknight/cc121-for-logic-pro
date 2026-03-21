@@ -17,6 +17,13 @@ local MODE = {
     -- EQ banks
     eqBank1 = 'EQ1',
     eqBank2 = 'EQ2',
+
+    -- Functions
+    fn0 = 'FN0',
+    fn1 = 'FN1',
+    fn2 = 'FN2',
+    fn3 = 'FN3',
+    fn4 = 'FN4'
 }
 
 --
@@ -272,6 +279,18 @@ BOUND_ID_CLEM = {
     STUDIO_HORNS        = 1231968114,   -- 'InWr', boundSubID = 3
 }
 
+function controller_initialize(applicationName,deviceNewlyDetected)
+    print(applicationName)
+    return {midi={0xB0, CC.PAN,0x00}}
+end
+
+-- Return MIDI event stream that finializes the device after usage, this will be called _every_ time
+-- when the app is terminated.
+function controller_finalize()
+    print('Finalize')
+    return {midi={0xB0, CC.PAN,0x00}}
+end
+
 function dumpGlobals()
     local result = ""
     for k, v in pairs(_G) do
@@ -287,7 +306,9 @@ function dumpGlobals()
     print(result)
 end
 
-dumpGlobals()
+function controller_version()
+    return "0.9"
+end
 
 --
 -- Control IDs
@@ -332,19 +353,30 @@ local kControlIDToEnd = 36
 local kControlIDRewind = 37
 local kControlIDForward = 38
 local kControlIDAllBypass = 39
-
+local kControlIDValEnc = 40
+local kControlIDValEncBtn = 41
+local kControlIDFnBtn1 = 42
+local kControlIDFnBtn2 = 43
+local kControlIDFnBtn3 = 44
+local kControlIDFnBtn4 = 45
 ---
 -- Controller info
 --
 function controller_info()
+
+    print("-------------------- CC121 --------------------")
+
     return {
         model = "Steinberg CC121",
-        manufacturer = "YAMAHA",
+        manufacturer = "Yamaha",
         copyright = "©2026 Kristjan Knight",
         version = 105,
 
-        usb_vendor_id  = 1177,
-        usb_product_id = 4177,
+        -- Certain controllers are passed through automatically (Pitch Bend, Modulation, etc)
+        auto_passthrough = false,
+
+        -- don't play notes from this device
+        ignore_notes = true,
 
         --
         -- MIDI device setup
@@ -824,8 +856,94 @@ function controller_info()
                 inport = PORT_IN,
                 outport = PORT_OUT,
                 midi = { 0x90, NOTE.ALL_BYPASS, MIDI_LSB }
-            }
+            },
+            -- Value encoder
+            {
+                name = "ValueEncoder",
+                label = "Value Encoder",
+                controlID = kControlIDValEnc,
+                objectType = "Knob",
+                midiType = "RelativeSM",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0xB0, CC.VALUE, MIDI_LSB }
+            },
 
+            -- Value encoder button
+            {
+                name = "ValueEncoderBtn",
+                label = "Value Encoder Button",
+                controlID = kControlIDValEncBtn,
+                objectType = "Button",
+                midiType = "Momentary",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0x90, NOTE.VALUE_ENCODER_BUTTON, MIDI_LSB }
+            },
+
+            -- Function button 1
+            {
+                name = "FunctionBtn1",
+                label = "Function Button 1",
+                controlID = kControlIDFnBtn1,
+                objectType = "Button",
+                midiType = "Momentary",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                hasFeedback = true,
+                fbType = FB_AUTO,
+                maxVal = 1,
+                minVal = 0,
+                midi = { 0x90, NOTE.FUNCTION1, MIDI_LSB }
+            },
+
+            -- Function button 2
+            {
+                name = "FunctionBtn2",
+                label = "Function Button 2",
+                controlID = kControlIDFnBtn2,
+                objectType = "Button",
+                midiType = "Momentary",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                hasFeedback = true,
+                fbType = FB_AUTO,
+                maxVal = 1,
+                minVal = 0,
+                midi = { 0x90, NOTE.FUNCTION2, MIDI_LSB }
+            },
+
+            -- Function button 3
+            {
+                name = "FunctionBtn3",
+                label = "Function Button 3",
+                controlID = kControlIDFnBtn3,
+                objectType = "Button",
+                midiType = "Momentary",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                hasFeedback = true,
+                fbType = FB_AUTO,
+                maxVal = 1,
+                minVal = 0,
+                midi = { 0x90, NOTE.FUNCTION3, MIDI_LSB }
+            },
+
+            -- Function button 4
+            {
+                name = "FunctionBtn4",
+                label = "Function Button 4",
+                controlID = kControlIDFnBtn4,
+                objectType = "Button",
+                midiType = "Momentary",
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                hasFeedback = true,
+                fbType = FB_AUTO,
+                maxVal = 1,
+                minVal = 0,
+                midi = { 0x90, NOTE.FUNCTION4, MIDI_LSB }
+            },
         },
 
         --
@@ -1008,8 +1126,66 @@ function controller_info()
             { control = 'HiEqGain', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 30, localResolution = 127,
               boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Hi Cut Slope' },
             { control = 'HiEqEnable', CSTrack = 0, trackParam = CS_BOUNDPLUGINPAR1, paramOffset = 28,
-              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Hi Cut On/Off' }
+              boundManuf = BOUND_MANUF.EMAG, boundSubID = 0, boundPlugInID = BOUND_ID.CHANNEL_EQ, paramName = 'Hi Cut On/Off' },
+
+            ----------------------------------------------------------------
+            -- Functions ZONE
+            ----------------------------------------------------------------
+            { zone = 'CC121: Functions' },
+
+            { mode = MODE.fn0 },
+            { control='FunctionBtn1', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn1, feedbackVal = 0 },
+            { control='FunctionBtn2', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn2, feedbackVal = 0 },
+            { control='FunctionBtn3', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn3, feedbackVal = 0 },
+            { control='FunctionBtn4', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn4, feedbackVal = 0 },
+            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 0, localResolution = 127, paramName='@tp' },
+
+            { mode = MODE.fn1 },
+            { control='FunctionBtn1', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn0, feedbackVal = 2 },
+            { control='FunctionBtn2', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn2, feedbackVal = 0 },
+            { control='FunctionBtn3', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn3, feedbackVal = 0 },
+            { control='FunctionBtn4', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn4, feedbackVal = 0 },
+            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 4, localResolution = 127, paramName='@tp' },
+
+            { mode = MODE.fn2 },
+            { control='FunctionBtn1', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn1, feedbackVal = 0 },
+            { control='FunctionBtn2', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn0, feedbackVal = 3 },
+            { control='FunctionBtn3', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn3, feedbackVal = 0 },
+            { control='FunctionBtn4', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn4, feedbackVal = 0 },
+            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 5, localResolution = 127, paramName='@tp' },
+
+            { mode = MODE.fn3 },
+            { control='FunctionBtn1', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn1, feedbackVal = 0 },
+            { control='FunctionBtn2', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn2, feedbackVal = 0 },
+            { control='FunctionBtn3', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn0, feedbackVal = 4 },
+            { control='FunctionBtn4', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn4, feedbackVal = 0 },
+            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 6, localResolution = 127, paramName='@tp' },
+
+            { mode = MODE.fn4 },
+            { control='FunctionBtn1', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn1, feedbackVal = 0 },
+            { control='FunctionBtn2', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn2, feedbackVal = 0 },
+            { control='FunctionBtn3', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn3, feedbackVal = 0 },
+            { control='FunctionBtn4', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn0, feedbackVal = 5 },
+            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 7, localResolution = 127, paramName='@tp' },
 
         }
     }
 end
+
+-- Every MIDI event from this device that is an assignment is filtered through this function
+function controller_midi_out(midiEvent,name,valueString,color)
+    print("controller_midi_out")
+    return nil
+end
+
+--             -- MODE: Global — AI knob controls plugin parameter
+--            { mode = MODE.ai },
+--            { control = 'Jog', setMode = MODE.jog, feedbackVal = 0 },
+--            --{ control = "AI", CSTrack = 0, trackParam = CS_PLUGINPAR1, paramName = "@tp,@tn" },
+--            { control = 'AI', globalObj = AGL_HORIZONTALZOOM, localResolution = 127 },
+--
+--            -- MODE: Jog — AI knob controls scrub/jog
+--            { mode = MODE.jog },
+--            { control = 'Jog', setMode = MODE.ai, feedbackVal = 1 },
+--            { control = "AI", globalObj = AGL_SCRUB, clockPart = ACP_FORMAT,
+--              valueMode = kAssignRelative, paramName = "Scrub", localResolution = 127 },
