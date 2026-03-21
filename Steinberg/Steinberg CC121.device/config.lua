@@ -892,7 +892,7 @@ function controller_info()
                 outport = PORT_OUT,
                 hasFeedback = true,
                 fbType = FB_AUTO,
-                maxVal = 1,
+                maxVal = 5,
                 minVal = 0,
                 midi = { 0x90, NOTE.FUNCTION1, MIDI_LSB }
             },
@@ -908,7 +908,7 @@ function controller_info()
                 outport = PORT_OUT,
                 hasFeedback = true,
                 fbType = FB_AUTO,
-                maxVal = 1,
+                maxVal = 5,
                 minVal = 0,
                 midi = { 0x90, NOTE.FUNCTION2, MIDI_LSB }
             },
@@ -924,7 +924,7 @@ function controller_info()
                 outport = PORT_OUT,
                 hasFeedback = true,
                 fbType = FB_AUTO,
-                maxVal = 1,
+                maxVal = 5,
                 minVal = 0,
                 midi = { 0x90, NOTE.FUNCTION3, MIDI_LSB }
             },
@@ -940,7 +940,7 @@ function controller_info()
                 outport = PORT_OUT,
                 hasFeedback = true,
                 fbType = FB_AUTO,
-                maxVal = 1,
+                maxVal = 5,
                 minVal = 0,
                 midi = { 0x90, NOTE.FUNCTION4, MIDI_LSB }
             },
@@ -1132,40 +1132,25 @@ function controller_info()
             -- Functions ZONE
             ----------------------------------------------------------------
             { zone = 'CC121: Functions' },
-
-            { mode = MODE.fn0 },
-            { control='FunctionBtn1', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn1, feedbackVal = 0 },
-            { control='FunctionBtn2', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn2, feedbackVal = 0 },
-            { control='FunctionBtn3', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn3, feedbackVal = 0 },
-            { control='FunctionBtn4', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn4, feedbackVal = 0 },
+            { control='FunctionBtn1', setMode = MODE.fn1, feedbackVal=1, valueMode = kAssignToggle},
+            { control='FunctionBtn2', setMode = MODE.fn2, feedbackVal=2, valueMode = kAssignToggle},
+            { control='FunctionBtn3', setMode = MODE.fn3, feedbackVal=3, valueMode = kAssignToggle},
+            { control='FunctionBtn4', setMode = MODE.fn4, feedbackVal=3, valueMode = kAssignToggle},
             { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 0, localResolution = 127, paramName='@tp' },
 
-            { mode = MODE.fn1 },
-            { control='FunctionBtn1', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn0, feedbackVal = 2 },
-            { control='FunctionBtn2', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn2, feedbackVal = 0 },
-            { control='FunctionBtn3', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn3, feedbackVal = 0 },
-            { control='FunctionBtn4', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn4, feedbackVal = 0 },
+            { mode = MODE.fn0, group = "FunctionBtnM", feedbackVal=0 },
+            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 0, localResolution = 127, paramName='@tp' },
+
+            { control='FunctionBtn1', mode = MODE.fn1, group = "FunctionBtnM", feedbackVal=1 },
             { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 4, localResolution = 127, paramName='@tp' },
 
-            { mode = MODE.fn2 },
-            { control='FunctionBtn1', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn1, feedbackVal = 0 },
-            { control='FunctionBtn2', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn0, feedbackVal = 3 },
-            { control='FunctionBtn3', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn3, feedbackVal = 0 },
-            { control='FunctionBtn4', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn4, feedbackVal = 0 },
+            { control='FunctionBtn2', mode = MODE.fn2, group = "FunctionBtnM", feedbackVal=2 },
             { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 5, localResolution = 127, paramName='@tp' },
 
-            { mode = MODE.fn3 },
-            { control='FunctionBtn1', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn1, feedbackVal = 0 },
-            { control='FunctionBtn2', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn2, feedbackVal = 0 },
-            { control='FunctionBtn3', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn0, feedbackVal = 4 },
-            { control='FunctionBtn4', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn4, feedbackVal = 0 },
+            { control='FunctionBtn3', mode = MODE.fn3, group = "FunctionBtnM", feedbackVal=3 },
             { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 6, localResolution = 127, paramName='@tp' },
 
-            { mode = MODE.fn4 },
-            { control='FunctionBtn1', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn1, feedbackVal = 0 },
-            { control='FunctionBtn2', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn2, feedbackVal = 0 },
-            { control='FunctionBtn3', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn3, feedbackVal = 0 },
-            { control='FunctionBtn4', group = "FunctionBtnM", valueMode = kAssignToggle, setMode = MODE.fn0, feedbackVal = 5 },
+            { control='FunctionBtn4', mode = MODE.fn4, group = "FunctionBtnM", feedbackVal=3 },
             { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 7, localResolution = 127, paramName='@tp' },
 
         }
