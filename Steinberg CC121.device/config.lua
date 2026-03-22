@@ -373,10 +373,10 @@ function controller_info()
         version = 105,
 
         -- Certain controllers are passed through automatically (Pitch Bend, Modulation, etc)
-        auto_passthrough = false,
+        auto_passthrough = true,
 
         -- don't play notes from this device
-        ignore_notes = true,
+        ignore_notes = false,
 
         --
         -- MIDI device setup
@@ -890,9 +890,9 @@ function controller_info()
                 midiType = "Momentary",
                 inport = PORT_IN,
                 outport = PORT_OUT,
-                hasFeedback = true,
-                fbType = FB_AUTO,
-                maxVal = 5,
+                --hasFeedback = true,
+                --fbType = FB_AUTO,
+                maxVal = 2,
                 minVal = 0,
                 midi = { 0x90, NOTE.FUNCTION1, MIDI_LSB }
             },
@@ -906,9 +906,9 @@ function controller_info()
                 midiType = "Momentary",
                 inport = PORT_IN,
                 outport = PORT_OUT,
-                hasFeedback = true,
-                fbType = FB_AUTO,
-                maxVal = 5,
+                --hasFeedback = true,
+                --fbType = FB_AUTO,
+                maxVal = 2,
                 minVal = 0,
                 midi = { 0x90, NOTE.FUNCTION2, MIDI_LSB }
             },
@@ -922,9 +922,9 @@ function controller_info()
                 midiType = "Momentary",
                 inport = PORT_IN,
                 outport = PORT_OUT,
-                hasFeedback = true,
-                fbType = FB_AUTO,
-                maxVal = 5,
+                --hasFeedback = true,
+                --fbType = FB_AUTO,
+                maxVal = 2,
                 minVal = 0,
                 midi = { 0x90, NOTE.FUNCTION3, MIDI_LSB }
             },
@@ -938,9 +938,9 @@ function controller_info()
                 midiType = "Momentary",
                 inport = PORT_IN,
                 outport = PORT_OUT,
-                hasFeedback = true,
-                fbType = FB_AUTO,
-                maxVal = 5,
+                --hasFeedback = true,
+                --fbType = FB_AUTO,
+                maxVal = 2,
                 minVal = 0,
                 midi = { 0x90, NOTE.FUNCTION4, MIDI_LSB }
             },
@@ -1132,26 +1132,26 @@ function controller_info()
             -- Functions ZONE
             ----------------------------------------------------------------
             { zone = 'CC121: Functions' },
-            { control='FunctionBtn1', setMode = MODE.fn1, feedbackVal=1, valueMode = kAssignToggle},
-            { control='FunctionBtn2', setMode = MODE.fn2, feedbackVal=2, valueMode = kAssignToggle},
-            { control='FunctionBtn3', setMode = MODE.fn3, feedbackVal=3, valueMode = kAssignToggle},
-            { control='FunctionBtn4', setMode = MODE.fn4, feedbackVal=3, valueMode = kAssignToggle},
+            { control='FunctionBtn1', setMode = MODE.fn1, valueMode = kAssignToggle},
+            { control='FunctionBtn2', setMode = MODE.fn2, valueMode = kAssignToggle},
+            { control='FunctionBtn3', setMode = MODE.fn3, valueMode = kAssignToggle},
+            { control='FunctionBtn4', setMode = MODE.fn4, valueMode = kAssignToggle},
             { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 0, localResolution = 127, paramName='@tp' },
 
-            { mode = MODE.fn0, group = "FunctionBtnM", feedbackVal=0 },
+            { mode = MODE.fn0 },
             { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 0, localResolution = 127, paramName='@tp' },
 
-            { control='FunctionBtn1', mode = MODE.fn1, group = "FunctionBtnM", feedbackVal=1 },
-            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 4, localResolution = 127, paramName='@tp' },
+            { control='FunctionBtn1', mode = MODE.fn1 },
+            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 40, localResolution = 127, paramName='@tp' },
 
-            { control='FunctionBtn2', mode = MODE.fn2, group = "FunctionBtnM", feedbackVal=2 },
-            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 5, localResolution = 127, paramName='@tp' },
+            { control='FunctionBtn2', mode = MODE.fn2 },
+            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 50, localResolution = 127, paramName='@tp' },
 
-            { control='FunctionBtn3', mode = MODE.fn3, group = "FunctionBtnM", feedbackVal=3 },
-            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 6, localResolution = 127, paramName='@tp' },
+            { control='FunctionBtn3', mode = MODE.fn3 },
+            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 60, localResolution = 127, paramName='@tp' },
 
-            { control='FunctionBtn4', mode = MODE.fn4, group = "FunctionBtnM", feedbackVal=3 },
-            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 7, localResolution = 127, paramName='@tp' },
+            { control='FunctionBtn4', mode = MODE.fn4 },
+            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 70, localResolution = 127, paramName='@tp' },
 
         }
     }
@@ -1159,18 +1159,29 @@ end
 
 -- Every MIDI event from this device that is an assignment is filtered through this function
 function controller_midi_out(midiEvent,name,valueString,color)
-    print("controller_midi_out")
+
+    print("AA")
+
+    -- Intercept FunctionBtn feedback to fix LED states
+    if midiEvent[0] == 0x90 and midiEvent[1] >= NOTE.FUNCTION1 and midiEvent[1] <= NOTE.FUNCTION4 then
+        local led = midiEvent[2] > 0 and 0x7F or 0x00
+        -- When a function button LED turns on, turn the others off
+        if led == 0x7F then
+            local midi = {}
+            for note = NOTE.FUNCTION1, NOTE.FUNCTION4 do
+                if note == midiEvent[1] then
+                    midi[#midi+1] = 0x90
+                    midi[#midi+1] = note
+                    midi[#midi+1] = 0x7F
+                else
+                    midi[#midi+1] = 0x90
+                    midi[#midi+1] = note
+                    midi[#midi+1] = 0x00
+                end
+            end
+            return {midi = midi}
+        end
+        return {midi = {0x90, midiEvent[1], led}}
+    end
     return nil
 end
-
---             -- MODE: Global — AI knob controls plugin parameter
---            { mode = MODE.ai },
---            { control = 'Jog', setMode = MODE.jog, feedbackVal = 0 },
---            --{ control = "AI", CSTrack = 0, trackParam = CS_PLUGINPAR1, paramName = "@tp,@tn" },
---            { control = 'AI', globalObj = AGL_HORIZONTALZOOM, localResolution = 127 },
---
---            -- MODE: Jog — AI knob controls scrub/jog
---            { mode = MODE.jog },
---            { control = 'Jog', setMode = MODE.ai, feedbackVal = 1 },
---            { control = "AI", globalObj = AGL_SCRUB, clockPart = ACP_FORMAT,
---              valueMode = kAssignRelative, paramName = "Scrub", localResolution = 127 },
