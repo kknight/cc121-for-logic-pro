@@ -306,8 +306,9 @@ function dumpGlobals()
     print(result)
 end
 
+VERSION = 90
 function controller_version()
-    return "0.9"
+    return "0.9.0"
 end
 
 --
@@ -370,13 +371,16 @@ function controller_info()
         model = "Steinberg CC121",
         manufacturer = "Yamaha",
         copyright = "©2026 Kristjan Knight",
-        version = 105,
+        version = VERSION,
+
+        usb_vendor_id  = 1177,
+        usb_product_id = 4177,
 
         -- Certain controllers are passed through automatically (Pitch Bend, Modulation, etc)
-        auto_passthrough = true,
+        auto_passthrough = false,
 
         -- don't play notes from this device
-        ignore_notes = false,
+        ignore_notes = true,
 
         --
         -- MIDI device setup
@@ -890,8 +894,7 @@ function controller_info()
                 midiType = "Momentary",
                 inport = PORT_IN,
                 outport = PORT_OUT,
-                --hasFeedback = true,
-                --fbType = FB_AUTO,
+                hasFeedback = true,
                 maxVal = 2,
                 minVal = 0,
                 midi = { 0x90, NOTE.FUNCTION1, MIDI_LSB }
@@ -906,8 +909,7 @@ function controller_info()
                 midiType = "Momentary",
                 inport = PORT_IN,
                 outport = PORT_OUT,
-                --hasFeedback = true,
-                --fbType = FB_AUTO,
+                hasFeedback = true,
                 maxVal = 2,
                 minVal = 0,
                 midi = { 0x90, NOTE.FUNCTION2, MIDI_LSB }
@@ -922,8 +924,7 @@ function controller_info()
                 midiType = "Momentary",
                 inport = PORT_IN,
                 outport = PORT_OUT,
-                --hasFeedback = true,
-                --fbType = FB_AUTO,
+                hasFeedback = true,
                 maxVal = 2,
                 minVal = 0,
                 midi = { 0x90, NOTE.FUNCTION3, MIDI_LSB }
@@ -938,8 +939,7 @@ function controller_info()
                 midiType = "Momentary",
                 inport = PORT_IN,
                 outport = PORT_OUT,
-                --hasFeedback = true,
-                --fbType = FB_AUTO,
+                hasFeedback = true,
                 maxVal = 2,
                 minVal = 0,
                 midi = { 0x90, NOTE.FUNCTION4, MIDI_LSB }
@@ -1009,8 +1009,8 @@ function controller_info()
             { control = "Stop", keyCmd = KEYCMD.STOP },
             { control = "Record", keyCmd = KEYCMD.RECORD },
             { control = "Loop", keyCmd = KEYCMD.CYCLE },
-            { control = "Rewind", keyCmd = KEYCMD.REWIND },
-            { control = "Forward", keyCmd = KEYCMD.FORWARD },
+            { control = "Rewind", keyCmd = KEYCMD.REWIND, keyRepeat = true },
+            { control = "Forward", keyCmd = KEYCMD.FORWARD, keyRepeat = true },
             { control = "ToStart", keyCmd = KEYCMD.PREV_MARKER },
             { control = "ToEnd", keyCmd = KEYCMD.NEXT_MARKER },
 
@@ -1132,26 +1132,26 @@ function controller_info()
             -- Functions ZONE
             ----------------------------------------------------------------
             { zone = 'CC121: Functions' },
-            { control='FunctionBtn1', setMode = MODE.fn1, valueMode = kAssignToggle},
-            { control='FunctionBtn2', setMode = MODE.fn2, valueMode = kAssignToggle},
-            { control='FunctionBtn3', setMode = MODE.fn3, valueMode = kAssignToggle},
-            { control='FunctionBtn4', setMode = MODE.fn4, valueMode = kAssignToggle},
-            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 0, localResolution = 127, paramName='@tp' },
+            { control = 'FunctionBtn1', setMode = MODE.fn1, valueMode = kAssignToggle },
+            { control = 'FunctionBtn2', setMode = MODE.fn2, valueMode = kAssignToggle },
+            { control = 'FunctionBtn3', setMode = MODE.fn3, valueMode = kAssignToggle },
+            { control = 'FunctionBtn4', setMode = MODE.fn4, valueMode = kAssignToggle },
+            { control = 'ValueEncoder', CSTrack = 0, trackParam = CS_SMARTCONTROL1, paramOffset = 0, localResolution = 127, paramName = '@tp' },
 
             { mode = MODE.fn0 },
-            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 0, localResolution = 127, paramName='@tp' },
+            { control = 'ValueEncoder', CSTrack = 0, trackParam = CS_SMARTCONTROL1, paramOffset = 0, localResolution = 127, paramName = '@tp' },
 
-            { control='FunctionBtn1', mode = MODE.fn1 },
-            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 40, localResolution = 127, paramName='@tp' },
+            { control = 'FunctionBtn1', mode = MODE.fn1 },
+            { control = 'ValueEncoder', CSTrack = 0, trackParam = CS_SMARTCONTROL1, paramOffset = 4, localResolution = 127, paramName = '@tp' },
 
-            { control='FunctionBtn2', mode = MODE.fn2 },
-            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 50, localResolution = 127, paramName='@tp' },
+            { control = 'FunctionBtn2', mode = MODE.fn2 },
+            { control = 'ValueEncoder', CSTrack = 0, trackParam = CS_SMARTCONTROL1, paramOffset = 5, localResolution = 127, paramName = '@tp' },
 
-            { control='FunctionBtn3', mode = MODE.fn3 },
-            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 60, localResolution = 127, paramName='@tp' },
+            { control = 'FunctionBtn3', mode = MODE.fn3 },
+            { control = 'ValueEncoder', CSTrack = 0, trackParam = CS_SMARTCONTROL1, paramOffset = 6, localResolution = 127, paramName = '@tp' },
 
-            { control='FunctionBtn4', mode = MODE.fn4 },
-            { control = 'ValueEncoder', CSTrack=true, trackParam = CS_SMARTCONTROL1, paramOffset = 70, localResolution = 127, paramName='@tp' },
+            { control = 'FunctionBtn4', mode = MODE.fn4 },
+            { control = 'ValueEncoder', CSTrack = 0, trackParam = CS_SMARTCONTROL1, paramOffset = 7, localResolution = 127, paramName = '@tp' },
 
         }
     }
@@ -1160,28 +1160,38 @@ end
 -- Every MIDI event from this device that is an assignment is filtered through this function
 function controller_midi_out(midiEvent,name,valueString,color)
 
-    print("AA")
+    --print(string.format("= v %d == TEST v7: MIDI_OUT [0x%02X, 0x%02X, 0x%02X] name=%s valueString=%s ===",
+    --        VERSION, midiEvent[0], midiEvent[1], midiEvent[2], name or "-", valueString or "-"))
 
-    -- Intercept FunctionBtn feedback to fix LED states
+   -- Intercept FunctionBtn feedback to fix LED states
     if midiEvent[0] == 0x90 and midiEvent[1] >= NOTE.FUNCTION1 and midiEvent[1] <= NOTE.FUNCTION4 then
-        local led = midiEvent[2] > 0 and 0x7F or 0x00
-        -- When a function button LED turns on, turn the others off
-        if led == 0x7F then
-            local midi = {}
-            for note = NOTE.FUNCTION1, NOTE.FUNCTION4 do
-                if note == midiEvent[1] then
-                    midi[#midi+1] = 0x90
-                    midi[#midi+1] = note
-                    midi[#midi+1] = 0x7F
-                else
-                    midi[#midi+1] = 0x90
-                    midi[#midi+1] = note
-                    midi[#midi+1] = 0x00
-                end
+
+        -- By default we send zero velocity
+        local midiOut = { 0x90, midiEvent[1], 0x00 }
+
+        -- Intercept notes with greater than 0 velocity
+        if (midiEvent[2] > 0) then
+
+            -- We send full velocity to the button with the current mode (valueString)
+            if valueString == "FN1" and midiEvent[1] == NOTE.FUNCTION1 then
+                midiOut = { 0x90, NOTE.FUNCTION1, 0x7F }
+            elseif valueString == "FN2" and midiEvent[1] == NOTE.FUNCTION2 then
+                midiOut = { 0x90, NOTE.FUNCTION2, 0x7F }
+            elseif valueString == "FN3" and midiEvent[1] == NOTE.FUNCTION3 then
+                midiOut = { 0x90, NOTE.FUNCTION3, 0x7F }
+            elseif valueString == "FN4" and midiEvent[1] == NOTE.FUNCTION4 then
+                midiOut = { 0x90, NOTE.FUNCTION4, 0x7F }
             end
-            return {midi = midi}
+
         end
-        return {midi = {0x90, midiEvent[1], led}}
+
+        --print(string.format("=      ==  MIDI_OUT [0x%02X, 0x%02X, 0x%02X] ===",
+        --        midiOut[1], midiOut[2], midiOut[3]))
+
+        return { midi = midiOut, outport=PORT_OUT }
+
     end
+
+    -- Do not filter for everything else
     return nil
 end
