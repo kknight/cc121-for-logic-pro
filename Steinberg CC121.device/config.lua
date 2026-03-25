@@ -280,8 +280,15 @@ BOUND_ID_CLEM = {
     STUDIO_HORNS        = 1231968114,   -- 'InWr', boundSubID = 3
 }
 
+function controller_timer_trigger()
+    settriggertimer(10000)  -- re-arm for next second
+    return {
+        midi = { 0xF0, 0x43, 0x10, 0x3E, 0x15, 0x00, 0x01, 0xF7 }
+    }
+end
+
 function controller_initialize(applicationName,deviceNewlyDetected)
-    print(applicationName)
+    settriggertimer(10000)
     return {midi={0xB0, CC.PAN,0x00}}
 end
 
