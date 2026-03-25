@@ -8,6 +8,7 @@ local MODE = {
     -- AI section modes
     ai = 'AI',
     jog = 'Jog',
+    zoom = 'Zoom',
 
     -- e-Button rotation modes
     viewAuto = 'Auto',
@@ -360,6 +361,7 @@ local kControlIDFnBtn1 = 42
 local kControlIDFnBtn2 = 43
 local kControlIDFnBtn3 = 44
 local kControlIDFnBtn4 = 45
+local kControlIDLockBtn = 46
 ---
 -- Controller info
 --
@@ -944,6 +946,20 @@ function controller_info()
                 minVal = 0,
                 midi = { 0x90, NOTE.FUNCTION4, MIDI_LSB }
             },
+
+            -- Lock button
+            {
+                name = "Lock",
+                label = "Lock",
+                controlID = kControlIDLockBtn,
+                objectType = "Button",
+                midiType = "Momentary",
+                hasFeedback = true,
+                maxVal = 2,
+                inport = PORT_IN,
+                outport = PORT_OUT,
+                midi = { 0x90, NOTE.LOCK, MIDI_LSB }
+            },
         },
 
         --
@@ -968,14 +984,21 @@ function controller_info()
             -- MODE: Global — AI knob controls plugin parameter
             { mode = MODE.ai },
             { control = 'Jog', setMode = MODE.jog, feedbackVal = 0 },
-            --{ control = "AI", CSTrack = 0, trackParam = CS_PLUGINPAR1, paramName = "@tp,@tn" },
+            { control = 'Lock', setMode = MODE.zoom, feedbackVal = 0 },
             { control = 'AI', globalObj = AGL_HORIZONTALZOOM, localResolution = 127 },
 
             -- MODE: Jog — AI knob controls scrub/jog
             { mode = MODE.jog },
             { control = 'Jog', setMode = MODE.ai, feedbackVal = 1 },
+            { control = 'Lock', setMode = MODE.zoom, feedbackVal = 0 },
             { control = "AI", globalObj = AGL_SCRUB, clockPart = ACP_FORMAT,
               valueMode = kAssignRelative, paramName = "Scrub", localResolution = 127 },
+
+            -- MODE: Zoom — Vertical zoom mode controlled by the lock button
+            { mode = MODE.zoom },
+            { control = 'Jog', setMode = MODE.jog, feedbackVal = 0 },
+            { control = 'Lock', setMode = MODE.ai, feedbackVal = 1 },
+            { control = 'AI', globalObj = AGL_VERTICALZOOM, localResolution = 127 },
 
             ----------------------------------------------------------------
             -- MIXER ZONE: always-active, no modes
@@ -1191,6 +1214,29 @@ function controller_midi_out(midiEvent,name,valueString,color)
         return { midi = midiOut, outport=PORT_OUT }
 
     end
+
+    -- Intercept AI and Lock button feedback to fix LED states
+    if midiEvent[0] == 0x90 and (midiEvent[1] == NOTE.JOG or midiEvent[1] == NOTE.LOCK) then
+
+        -- By default we send zero velocity
+        local midiOut = { 0x90, midiEvent[1], 0x00 }
+
+        -- Intercept notes with greater than 0 velocity
+        if (midiEvent[2] > 0) then
+            -- We send full velocity to the button with the current mode (valueString)
+            if valueString == "Jog" and midiEvent[1] == NOTE.JOG then
+                midiOut = { 0x90, NOTE.JOG, 0x7F }
+            elseif valueString == "AI" and midiEvent[1] == NOTE.JOG then
+                midiOut = { 0x90, NOTE.JOG, 0x7F }
+            elseif valueString == "Zoom" and midiEvent[1] == NOTE.LOCK then
+                midiOut = { 0x90, NOTE.LOCK, 0x7F }
+            end
+        end
+
+        return { midi = midiOut, outport=PORT_OUT }
+
+    end
+
 
     -- Do not filter for everything else
     return nil
