@@ -90,8 +90,16 @@ cp -a CC121.device /Library/Audio/Midi Device Scripts/Yamaha/
 
 ## Developing
 
+TBD
+
 ## Acknowledgements
+
+TBD
 
 ## License
 
+[MIT](./LICENCE)
+
 ## Disclaimer
+
+TBD
