@@ -90,8 +90,16 @@ cp -a CC121.device /Library/Audio/Midi Device Scripts/Yamaha/
 
 ## Developing
 
+TBD
+
 ## Acknowledgements
+
+TBD
 
 ## License
 
+[MIT](https://github.com/kknight/cc121-for-logic-pro/blob/main/LICENSE)
+
 ## Disclaimer
+
+TBD
