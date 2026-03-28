@@ -78,8 +78,14 @@ yellow.
 
 ## Installation
 
+The easiest way to install this device script is to download the latest release from 
+the [releases page](https://github.com/kknight/cc121-for-logic-pro/releases) page and run the installer.
+
+Alternatively you can clone this repository and copy the `CC121.device` directory to the following directory:
+
 ````
-/Library/Audio/Midi Device Scripts
+mkdir -p /Library/Audio/Midi Device Scripts/Yamaha
+cp -a CC121.device /Library/Audio/Midi Device Scripts/Yamaha/
 ````
 
 ## Developing
