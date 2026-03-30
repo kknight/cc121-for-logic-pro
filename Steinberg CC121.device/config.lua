@@ -281,14 +281,14 @@ BOUND_ID_CLEM = {
 }
 
 function controller_timer_trigger()
-    settriggertimer(10000)  -- re-arm for next second
+    settriggertimer(1000)  -- re-arm for next second
     return {
         midi = { 0xF0, 0x43, 0x10, 0x3E, 0x15, 0x00, 0x01, 0xF7 }
     }
 end
 
 function controller_initialize(applicationName,deviceNewlyDetected)
-    settriggertimer(10000)
+    settriggertimer(1000)
     return {midi={0xB0, CC.PAN,0x00}}
 end
 
@@ -314,9 +314,9 @@ function dumpGlobals()
     print(result)
 end
 
-VERSION = 90
+VERSION = 91
 function controller_version()
-    return "0.9.0"
+    return "0.9.1"
 end
 
 --
@@ -614,6 +614,9 @@ function controller_info()
                 midiType = "Momentary",
                 inport = PORT_IN,
                 outport = PORT_OUT,
+                hasFeedback = true,
+                maxVal = 127,
+                valueMode = kAssignRotate,
                 midi = { 0x90, NOTE.OPEN_VSTI, MIDI_LSB }
             },
 
@@ -1013,12 +1016,13 @@ function controller_info()
             { zone = 'CC121: Mixer' },
 
             { control = "Fader", CSTrack = 0, trackParam = AUVOLUME, paramName = "@tn Level" },
-            { control = "Pan", CSTrack = 0, trackParam = AUPAN, paramName = "@tn Pan" },
+            { control = "Pan", CSTrack = 0, trackParam = AUPAN, paramName = "@tn Pan", localResolution = 127 },
             { control = "Mute", CSTrack = 0, trackParam = AUMUTE, paramName = "@tn Mute" },
             { control = "Solo", CSTrack = 0, trackParam = AUSOLO, paramName = "@tn Solo" },
             { control = "InputMonitor", CSTrack = 0, trackParam = TRACKPARAM.INPUT_MON, paramName = "@tn Input Monitor" },
             { control = "RecArm", CSTrack = 0, trackParam = CS_RECRDY, paramName = "@tn Rec Ready" },
-            { control = "OpenVST", keyCmd = KEYCMD.PLUG_INS },
+            { control = 'OpenVST', CSTrack = 0, trackParam = CS_NAME },
+            { control = "OpenVST", CSTrack = 0, trackParam = CS_INSTOPEN, paramName = "@tn Instrument", feedbackVal = 127 },
 
             -- This toggles On/Off selected track automation and put it in Read mode
             { control = "Read", CSTrack = 0, trackParam = CS_AUTO, valueMode = kAssignToggle, minVal = 1, multiply = 1, paramName = '@tn Read' },
@@ -1193,7 +1197,7 @@ function controller_midi_out(midiEvent,name,valueString,color)
     --print(string.format("= v %d == TEST v7: MIDI_OUT [0x%02X, 0x%02X, 0x%02X] name=%s valueString=%s ===",
     --        VERSION, midiEvent[0], midiEvent[1], midiEvent[2], name or "-", valueString or "-"))
 
-   -- Intercept FunctionBtn feedback to fix LED states
+    -- Intercept FunctionBtn feedback to fix LED states
     if midiEvent[0] == 0x90 and midiEvent[1] >= NOTE.FUNCTION1 and midiEvent[1] <= NOTE.FUNCTION4 then
 
         -- By default we send zero velocity
