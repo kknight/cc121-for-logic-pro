@@ -32,7 +32,7 @@ yellow.
 | Monitor          | Input monitoring                                                       |
 | Record Arm       | Arm for recording<br/>links when recording is active                   |
 | e-Button         | Press once to go to show automation,<br/> once again to show flex mode |
-| Edit Instrument  | Open/Close plugin windows                                              |
+| Edit Instrument  | Open/Close instrument window                                           |
 | Channel ◀ / ▶    | Select previous/next track                                             |
 
 **EQ Section** — Control Channel EQ:
