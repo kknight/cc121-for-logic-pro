@@ -93,13 +93,13 @@ echo "    Payload staged at: $INSTALL_DIR"
 echo "==> Creating installer scripts..."
 cat > "$SCRIPTS_DIR/postinstall" << 'POSTINSTALL'
 #!/bin/bash
-INSTALL_DIR="/Library/Audio/MIDI Device Scripts/Yamaha/Steinberg CC121.device/"
+DEVICE_NAME="Steinberg CC121.device"
+INSTALL_DIR="/Library/Audio/MIDI Device Scripts/Yamaha/"
 
 # Ensure correct ownership and permissions
-chown -R root:wheel "$INSTALL_DIR"
 chmod -R 755 "$INSTALL_DIR"
-chmod 644 "$INSTALL_DIR/config.lua"
-[ -f "$INSTALL_DIR/icon.png" ] && chmod 644 "$INSTALL_DIR/icon.png"
+chmod 644 "$INSTALL_DIR/$DEVICE_NAME/config.lua"
+[ -f "$INSTALL_DIR/$DEVICE_NAME/icon.png" ] && chmod 644 "$INSTALL_DIR/$DEVICE_NAME/icon.png"
 
 exit 0
 POSTINSTALL
