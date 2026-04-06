@@ -89,8 +89,13 @@ cp -a CC121.device /Library/Audio/Midi Device Scripts/Yamaha/
 ````
 
 ## Developing
+If you'd like to contribute to this project or create your own device script, take a look at the development guide:
 
-TBD
+[DEVELOPING.md](https://github.com/kknight/cc121-for-logic-pro/tree/main/docs/DEVELOPING.md)
+
+and the Logic Pro Lua reference:
+
+[LOGIC_LUA_REFERENCE.md](https://github.com/kknight/cc121-for-logic-pro/tree/main/docs/LOGIC_LUA_REFERENCE.md)
 
 ## Acknowledgements
 
