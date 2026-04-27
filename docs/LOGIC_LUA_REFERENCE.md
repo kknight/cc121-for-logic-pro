@@ -24,3 +24,35 @@
 | `startKey`             | number      | First MIDI note (Keyboard type)                                                                                                                                                                                                                                                |
 | `numberKeys`           | number      | Number of keys (Keyboard type)                                                                                                                                                                                                                                                 |
 | `keyRepeat`            | bool        | Whether to repeat on hold                                                                                                                                                                                                                                                      |
+
+## Assignment Definition Fields
+
+| Field             | Type            | Description                                                                                                                          |
+|-------------------|-----------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| `zone`            | string          | Defines a new named zone                                                                                                             |
+| `mode`            | string          | Activates a named mode within the current zone                                                                                       |
+| `control`         | string          | References an item by name                                                                                                           |
+| `setMode`         | string          | Mode to switch to when control is activated                                                                                          |
+| `feedbackVal`     | number          | Value to send as feedback when mode is active                                                                                        |
+| `keyCmd`          | number          | Key command to trigger                                                                                                               |
+| `trackParam`      | constant        | Track parameter to bind                                                                                                              |
+| `CSTrack`         | bool/number     | `true` or `0` = selected track, or index                                                                                             |
+| `faderBankTrack`  | number          | Track at fader bank offset (0–7)                                                                                                     |
+| `master`          | number          | `0` = master track                                                                                                                   |
+| `instr`           | number          | Instrument slot index                                                                                                                |
+| `paramOffset`     | number          | Parameter offset within a bank                                                                                                       |
+| `paramName`       | string          | Display name. Supports tokens: `@tp` (param), `@tn` (track name), `@t#` (track number), `@in` (instrument name), `@pn` (plugin name) |
+| `shortParamName`  | string          | Short version of param name                                                                                                          |
+| `boundManuf`      | string/constant | Manufacturer ID for bound plugin                                                                                                     |
+| `boundSubID`      | number          | Sub-ID for bound plugin                                                                                                              |
+| `boundPlugInID`   | number/constant | Plugin ID for bound plugin                                                                                                           |
+| `localResolution` | number          | Local encoder resolution                                                                                                             |
+| `valueMode`       | constant        | Override value mode                                                                                                                  |
+| `minVal`          | number          | Minimum value                                                                                                                        |
+| `maxVal`          | number          | Maximum value                                                                                                                        |
+| `multiply`        | number          | Value multiplier                                                                                                                     |
+| `bankType`        | constant        | `ABT_BYONE`, `ABT_BYBANK`, `ABT_CS`                                                                                                  |
+| `clockPart`       | constant        | `ACP_BAR`, `ACP_BEAT`, `ACP_FORMAT`, `ACP_TICKS`, `ACP_FRAMES`, `ACP_FRAME05`, `ACP_CYCLE`                                           |
+| `globalObj`       | constant        | Global object reference                                                                                                              |
+| `CSGroupObj`      | constant        | Control surface group object                                                                                                         |
+| `group`           | string          | Assignment group name                                                                                                                |

@@ -112,6 +112,56 @@ for available keys and their default values.
     }
 ```
 
-The `assignments` table correspondes to the Assignments in the Logic Pro UI:
+The `assignments` table corresponds to the Assignments panel in the Logic Pro UI:
 
 ![controller_assignments.png](images/controller_assignments.png)
+
+Each entry in `assignments` maps a physical control to something Logic Pro can act on. There are six assignment types:
+
+ * **Key Command** – triggers a Logic key command (e.g. Play, Record, Undo)
+ * **Track Parameter** – controls a parameter on the selected track (e.g. volume, pan)
+ * **Global Parameter** – controls a global DAW parameter (e.g. zoom, tempo)
+ * **Plugin Parameter** – controls a specific parameter on a bound plugin
+ * **Zone** – groups a set of assignments together into a named zone
+ * **Mode** – switches the active mode within a zone
+
+```lua
+    key_command_assignment = {
+        control = "Play",       -- must match an item name
+        keyCmd = KEYCMD.PLAY_TOGGLE,
+    }
+
+    track_parameter_assignment = {
+        control = "Pan",
+        CSTrack = 0,            -- 0 = selected track
+        trackParam = AUPAN,
+        paramName = "@tn Pan",
+        localResolution = 127
+    }
+
+    global_parameter_assignment = {
+        control = 'AI',
+        globalObj = AGL_HORIZONTALZOOM,
+        localResolution = 127
+    }
+
+    plugin_specific_parameter_assignment = {
+        control = 'HiEqQ',
+        CSTrack = 0,
+        trackParam = CS_BOUNDPLUGINPAR1,
+        paramOffset = 27,
+        localResolution = 127,
+        boundManuf = BOUND_MANUF.EMAG,
+        boundSubID = 0,
+        boundPlugInID = BOUND_ID.CHANNEL_EQ,
+        paramName = 'Hi Shelf Q-Factor'
+    },
+
+    zone_assignment = {
+        zone = ZONE.solo
+    }
+
+    mode_assignment = {
+        mode = MODE.ai
+    }
+```
